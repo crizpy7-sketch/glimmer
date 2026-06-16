@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Glimmer — make a gender reveal in 60 seconds</title>
+
+<!-- ============ SOCIAL PREVIEW (for ads + shared links) ============
+     This is what shows when your link is pasted into iMessage, WhatsApp,
+     Instagram, TikTok bio, or used as an ad destination.
+     [EDIT] og:image → drop an og.png (1200×630) next to this file. -->
+<meta name="description" content="Tap once and the whole screen lights up — pink or blue. Make a beautiful gender reveal link in 60 seconds." />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Someone has a secret… 💛 tap to reveal" />
+<meta property="og:description" content="Make a stunning gender reveal your whole family can open in one tap. No app, no account." />
+<meta property="og:image" content="og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Someone has a secret… 💛 tap to reveal" />
+<meta name="twitter:description" content="Make a stunning gender reveal in 60 seconds." />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23C2A878'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     GLIMMER — Reveal Studio v2
+     One file. No backend. Deploy to Netlify / GitHub Pages.
+     ── To connect Stripe: tap the gear (top-right) on your live site.
+        No code editing needed.
+     ============================================================ */
+  :root{
+    --porcelain:#FBF7F4; --paper:#FFFFFF; --ink:#241F33; --mauve:#8A8296;
+    --line:#EDE7E1; --gold:#C2A878; --gold-deep:#A2824F;
+    --rose:#E78BA6; --rose-soft:#FBE4EC; --sky:#6FA8DC; --sky-soft:#E2EFFA;
+    --shadow:0 22px 60px -26px rgba(36,31,51,.34);
+    --shadow-sm:0 10px 30px -16px rgba(36,31,51,.30);
+    --r:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:'Manrope',system-ui,sans-serif;background:var(--porcelain);color:var(--ink);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:520px;margin:0 auto;padding:20px 20px 70px;position:relative;z-index:2}
+
+  .brandbar{display:flex;align-items:center;gap:11px;margin-bottom:30px}
+  .mark{width:32px;height:32px;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 30% 28%, #fff6e6, var(--gold) 62%, var(--gold-deep));
+    box-shadow:0 5px 16px -6px var(--gold-deep)}
+  .brandbar b{font-family:'Fraunces';font-weight:600;font-size:1.22rem;letter-spacing:.2px}
+  .gear{margin-left:auto;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);
+    background:var(--paper);cursor:pointer;display:grid;place-items:center;font-size:1.05rem;color:var(--mauve);
+    transition:.16s}
+  .gear:active{transform:scale(.94)}
+
+  .eyebrow{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);font-weight:700}
+  h1{font-family:'Fraunces';font-weight:500;line-height:1.03;letter-spacing:-.015em;font-size:2.55rem;margin:.4rem 0 .6rem}
+  h1 em{font-style:italic;color:var(--gold-deep)}
+  .lede{color:var(--mauve);font-size:1.04rem;line-height:1.52;max-width:33ch}
+  .hero-cta{display:flex;gap:10px;margin-top:20px}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:22px}
+  .label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.03em;margin:0 0 9px}
+  .hint{font-size:.75rem;color:var(--mauve);margin-top:7px;line-height:1.45}
+  input[type=text],textarea{width:100%;font-family:inherit;font-size:1rem;color:var(--ink);background:var(--porcelain);
+    border:1px solid var(--line);border-radius:12px;padding:13px 14px;transition:border-color .18s,box-shadow .18s}
+  textarea{resize:none;min-height:72px;line-height:1.45}
+  input:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(194,168,120,.18)}
+  ::placeholder{color:#c2bbc6}
+  .field{margin-bottom:18px}
+
+  .secret{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .secret button{font-family:inherit;cursor:pointer;border:1.5px solid var(--line);background:var(--paper);
+    border-radius:14px;padding:16px 10px;font-weight:700;font-size:.96rem;color:var(--mauve);transition:.18s;
+    display:flex;flex-direction:column;align-items:center;gap:7px}
+  .secret button .dot{width:18px;height:18px;border-radius:50%;background:var(--line);transition:.18s}
+  .secret button.on[data-g="girl"]{border-color:var(--rose);color:#c25e84;background:var(--rose-soft)}
+  .secret button.on[data-g="girl"] .dot{background:var(--rose)}
+  .secret button.on[data-g="boy"]{border-color:var(--sky);color:#3f7cb4;background:var(--sky-soft)}
+  .secret button.on[data-g="boy"] .dot{background:var(--sky)}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:inherit;cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:999px;
+    padding:9px 15px;font-size:.86rem;font-weight:600;color:var(--mauve);transition:.16s}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;cursor:pointer;font-family:inherit;
+    font-weight:700;font-size:1rem;border:none;border-radius:14px;padding:16px;transition:.16s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{color:#fff;background:linear-gradient(135deg,#36304d,var(--ink));box-shadow:var(--shadow-sm)}
+  .btn-ghost{background:var(--paper);border:1.5px solid var(--line);color:var(--ink)}
+  .btn-gold{color:#473414;background:linear-gradient(135deg,#f4e6c6,var(--gold));box-shadow:0 12px 28px -14px var(--gold-deep)}
+  .btn-sm{padding:12px 16px;font-size:.9rem;width:auto}
+
+  .phone{margin:0 auto;width:232px;border-radius:32px;background:var(--ink);padding:9px;box-shadow:var(--shadow);cursor:pointer}
+  .phone-screen{border-radius:24px;height:400px;overflow:hidden;position:relative;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:26px;color:#fff}
+  .pv-teaser{font-size:.82rem;letter-spacing:.04em;opacity:.85;margin-bottom:14px}
+  .pv-word{font-family:'Fraunces';font-weight:600;font-size:2rem;line-height:1.05}
+  .pv-tap{margin-top:auto;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7}
+
+  .gen-block{margin-top:20px}
+  .gen-block .gh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .gen-block h3{font-family:'Fraunces';font-weight:600;font-size:1.08rem}
+  .reroll{margin-left:auto;font-family:inherit;font-size:.78rem;font-weight:700;color:var(--gold-deep);
+    background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px}
+  .copybox{background:var(--porcelain);border:1px solid var(--line);border-radius:12px;padding:13px 14px;
+    font-size:.93rem;line-height:1.52;margin-top:8px}
+  .caption{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);font-size:.9rem;line-height:1.45}
+  .caption:first-child{border-top:none}
+  .caption .n{font-family:'Fraunces';color:var(--gold-deep);font-weight:600;flex:none;min-width:52px}
+
+  .row{display:flex;gap:10px}.row .btn{flex:1}
+
+  .lock{margin-top:16px;border:1px solid var(--gold);border-radius:16px;padding:18px;
+    background:linear-gradient(180deg,#fffdf8,#fff)}
+  .lock h4{font-family:'Fraunces';font-weight:600;font-size:1.08rem;display:flex;align-items:center;gap:8px}
+  .lock .price-pill{margin-left:auto;font-family:'Manrope';font-weight:800;font-size:1rem;color:var(--gold-deep)}
+  .lock ul{list-style:none;margin:12px 0 16px;display:grid;gap:8px}
+  .lock li{font-size:.88rem;display:flex;gap:9px;align-items:flex-start}
+  .lock li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:7px;flex:none}
+  .paid-row{display:none;margin-top:12px}
+
+  /* ---------- setup / promote overlay ---------- */
+  .sheet{position:fixed;inset:0;z-index:30;background:rgba(20,16,30,.5);backdrop-filter:blur(3px);
+    display:none;align-items:flex-end;justify-content:center}
+  .sheet.open{display:flex}
+  .sheet-inner{background:var(--porcelain);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+    border-radius:26px 26px 0 0;padding:24px 20px 36px;animation:slideUp .32s cubic-bezier(.2,.9,.3,1.05)}
+  @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .sheet h2{font-family:'Fraunces';font-weight:600;font-size:1.5rem;margin-bottom:3px}
+  .sheet .sub{color:var(--mauve);font-size:.86rem;margin-bottom:20px;line-height:1.45}
+  .seg{display:flex;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:20px}
+  .seg button{flex:1;font-family:inherit;font-weight:700;font-size:.86rem;border:none;background:none;cursor:pointer;
+    padding:10px;border-radius:9px;color:var(--mauve);transition:.16s}
+  .seg button.on{background:var(--ink);color:#fff}
+  .close-x{position:absolute;right:18px;top:16px;background:none;border:none;font-size:1.5rem;color:var(--mauve);cursor:pointer}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(140%);background:var(--ink);
+    color:#fff;padding:12px 20px;border-radius:999px;font-size:.88rem;font-weight:600;z-index:99;
+    transition:transform .35s cubic-bezier(.2,.9,.3,1.2);box-shadow:var(--shadow)}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .foot{margin-top:36px;text-align:center;color:var(--mauve);font-size:.76rem;line-height:1.6}
+  .foot a{color:var(--gold-deep);text-decoration:none;font-weight:600}
+  .hidden{display:none !important}
+
+  /* ===================== VIEWER ===================== */
+  #viewer{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:34px;background:var(--ink);color:#fff;overflow:hidden;transition:background 1.1s ease}
+  #confetti{position:fixed;inset:0;z-index:1;pointer-events:none}
+  .vw-inner{position:relative;z-index:2;max-width:440px;width:100%}
+  .vw-from{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;margin-bottom:18px}
+  .vw-teaser{font-family:'Fraunces';font-weight:400;font-style:italic;font-size:1.7rem;line-height:1.25;opacity:.95}
+  .vw-orb{margin:42px auto 0;width:130px;height:130px;border-radius:50%;cursor:pointer;border:none;
+    background:radial-gradient(circle at 34% 30%, #fff8ea, var(--gold) 70%, var(--gold-deep));
+    color:#5a4514;font-family:'Manrope';font-weight:800;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;
+    box-shadow:0 0 0 0 rgba(194,168,120,.6);animation:breathe 2.6s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(194,168,120,.45)}
+    50%{transform:scale(1.05);box-shadow:0 0 0 26px rgba(194,168,120,0)}}
+  .vw-itsa{font-size:.82rem;letter-spacing:.32em;text-transform:uppercase;opacity:0;margin-bottom:10px}
+  .vw-word{font-family:'Fraunces';font-weight:600;font-size:clamp(3rem,18vw,5.4rem);line-height:.98;opacity:0;transform:scale(.6);letter-spacing:-.02em}
+  .vw-msg{font-family:'Fraunces';font-style:italic;font-weight:400;font-size:1.25rem;line-height:1.4;opacity:0;margin-top:22px;max-width:30ch;margin-left:auto;margin-right:auto}
+  .vw-cta{margin-top:40px;opacity:0}
+  .vw-cta a{display:inline-flex;align-items:center;gap:7px;color:#fff;text-decoration:none;font-size:.82rem;font-weight:700;
+    letter-spacing:.04em;border:1px solid rgba(255,255,255,.42);border-radius:999px;padding:12px 22px;backdrop-filter:blur(4px)}
+  .reveal-show{animation:pop .9s cubic-bezier(.2,.9,.25,1.3) forwards}
+  @keyframes pop{0%{opacity:0;transform:scale(.6)}60%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+  .fade-up{animation:fadeUp .8s ease forwards}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .pulse{animation:thump .55s ease}
+  @keyframes thump{0%{transform:scale(1)}40%{transform:scale(1.13)}100%{transform:scale(1)}}
+  .guess-row{display:flex;gap:14px;justify-content:center;margin-top:34px}
+  .guess-row button{cursor:pointer;font-family:inherit;font-weight:700;border:none;border-radius:16px;padding:18px 26px;font-size:1rem;color:#fff}
+  .guess-row .gg{background:var(--rose)}.guess-row .gb{background:var(--sky)}
+  @media (prefers-reduced-motion: reduce){.vw-orb{animation:none}.reveal-show,.fade-up{animation:none;opacity:1;transform:none}}
+  @media(max-width:380px){h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<!-- ===================== CREATOR ===================== -->
+<main id="creator" class="wrap">
+  <div class="brandbar">
+    <div class="mark"></div>
+    <b id="brandName">Glimmer</b>
+    <button class="gear" id="gearBtn" title="Setup" aria-label="Setup">⚙</button>
+  </div>
+
+  <p class="eyebrow">The moment, made beautiful</p>
+  <h1>Reveal the <em>secret</em> in a single tap.</h1>
+  <p class="lede">Build a link your whole family can open anywhere. One tap and the screen lights up — pink or blue.</p>
+  <div class="hero-cta">
+    <button class="btn btn-primary btn-sm" id="startBtn" style="flex:1">Make my reveal</button>
+    <button class="btn btn-ghost btn-sm" id="sampleBtn" style="flex:1">See an example</button>
+  </div>
+
+  <div class="card" id="builder" style="margin-top:28px">
+    <div class="field">
+      <label class="label">The secret — they'll never see it coming</label>
+      <div class="secret" id="secret">
+        <button data-g="girl"><span class="dot"></span>It's a girl</button>
+        <button data-g="boy"><span class="dot"></span>It's a boy</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="from">From</label>
+      <input type="text" id="from" placeholder="Mara & Jon" autocomplete="off" />
+    </div>
+    <div class="field">
+      <label class="label" for="msg">A little message (optional)</label>
+      <textarea id="msg" placeholder="We can't wait to meet you…"></textarea>
+      <p class="hint">Leave it blank and we'll write one for you.</p>
+    </div>
+    <div class="field">
+      <label class="label">Mood</label>
+      <div class="chips" id="moods"></div>
+    </div>
+    <button class="btn btn-primary" id="makeBtn">Create the reveal</button>
+  </div>
+
+  <section id="result" class="hidden" style="margin-top:28px">
+    <p class="eyebrow">Your reveal is ready</p>
+    <h1 style="font-size:1.95rem;margin-bottom:18px">Here's the magic.</h1>
+    <div class="phone" id="pvPhone" title="Tap to play">
+      <div class="phone-screen" id="pvScreen">
+        <div class="pv-teaser" id="pvTeaser"></div>
+        <div class="pv-word">Tap to reveal</div>
+        <div class="pv-tap" id="pvBrand">Glimmer</div>
+      </div>
+    </div>
+    <p class="hint" style="text-align:center">Tap the phone to play it</p>
+
+    <div class="row" style="margin-top:16px">
+      <button class="btn btn-primary" id="shareLink">Share the link</button>
+      <button class="btn btn-ghost" id="copyLink">Copy link</button>
+    </div>
+
+    <div class="gen-block">
+      <div class="gh"><h3>Announcement</h3><button class="reroll" id="rerollAnn">↻ Rewrite</button></div>
+      <div class="copybox" id="announce"></div>
+      <button class="btn btn-ghost btn-sm" id="copyAnnounce" style="margin-top:10px;width:100%">Copy announcement</button>
+    </div>
+
+    <div class="gen-block"><div class="gh"><h3>Captions for the post</h3></div><div id="captions"></div></div>
+
+    <div class="lock">
+      <h4>✦ Premium bundle <span class="price-pill" id="pricePill">$3</span></h4>
+      <ul>
+        <li>A printable announcement card (high-res PNG)</li>
+        <li>A "guess the gender" link to send guests first</li>
+        <li>Six more captions in different tones</li>
+      </ul>
+      <button class="btn btn-gold" id="buyBtn">Unlock everything · <span id="priceBtn">$3</span></button>
+      <div class="paid-row" id="paidRow">
+        <button class="btn btn-primary" id="paidBtn">I've completed my payment → unlock</button>
+        <p class="hint" style="text-align:center">Paid in the other tab? Tap above to unlock your bundle.</p>
+      </div>
+    </div>
+
+    <section id="premium" class="hidden" style="margin-top:18px">
+      <div class="gen-block"><div class="gh"><h3>Printable card</h3></div>
+        <canvas id="cardCanvas" width="1080" height="1350" style="display:none"></canvas>
+        <img id="cardPreview" style="width:100%;border-radius:14px;border:1px solid var(--line);margin-top:6px" alt="Announcement card" />
+        <button class="btn btn-gold btn-sm" id="dlCard" style="margin-top:10px;width:100%">Download card</button>
+      </div>
+      <div class="gen-block"><div class="gh"><h3>Guess-first link</h3></div>
+        <p class="hint" style="margin-top:0">Send this before the reveal — guests lock in boy or girl, then you drop the real link.</p>
+        <button class="btn btn-ghost btn-sm" id="copyGuess" style="margin-top:10px;width:100%">Copy guessing link</button>
+      </div>
+      <div class="gen-block"><div class="gh"><h3>More captions</h3></div><div id="captionsPro"></div></div>
+    </section>
+  </section>
+
+  <p class="foot">
+    Made with <b id="brandFoot">Glimmer</b> · <a id="ctaMake" href="#">Create your own reveal</a><br/>
+    Every reveal lives inside its own link. No account, nothing stored.
+  </p>
+</main>
+
+<!-- ===================== SETUP / PROMOTE SHEET ===================== -->
+<div class="sheet" id="sheet">
+  <div class="sheet-inner">
+    <button class="close-x" id="closeSheet" aria-label="Close">×</button>
+    <div class="seg">
+      <button id="tabSetup" class="on">Connect Stripe</button>
+      <button id="tabPromote">Promote it</button>
+    </div>
+
+    <!-- SETUP -->
+    <div id="paneSetup">
+      <h2>Connect your Stripe</h2>
+      <p class="sub">Only you see this screen. Paste your details, then copy your live link — that's the URL you share and run ads to.</p>
+      <div class="field"><label class="label" for="cfgBrand">Brand name</label>
+        <input type="text" id="cfgBrand" placeholder="Glimmer" autocomplete="off" /></div>
+      <div class="field"><label class="label" for="cfgStripe">Stripe Payment Link</label>
+        <input type="text" id="cfgStripe" placeholder="https://buy.stripe.com/…" autocomplete="off" />
+        <p class="hint">Stripe → Payment Links → create one → paste the URL here.</p></div>
+      <div class="field"><label class="label" for="cfgPrice">Price label</label>
+        <input type="text" id="cfgPrice" placeholder="$3" autocomplete="off" /></div>
+      <button class="btn btn-primary" id="applyCfg">Apply &amp; preview</button>
+      <button class="btn btn-gold" id="copyLive" style="margin-top:10px">Copy my live link</button>
+      <p class="hint" style="text-align:center;margin-top:12px">Tip: set your Stripe success URL to your site + <b>?unlocked=1</b> to auto-unlock buyers.</p>
+    </div>
+
+    <!-- PROMOTE -->
+    <div id="panePromote" class="hidden">
+      <h2>Promote it</h2>
+      <p class="sub">Ready-to-post copy and a demo link for your ads. Tap to copy.</p>
+      <div id="promoList"></div>
+      <button class="btn btn-ghost" id="copyDemo" style="margin-top:14px">Copy a live demo link for ads</button>
+      <p class="hint" style="margin-top:12px">For the prettiest shared previews, drop an <b>og.png</b> (1200×630) next to your file before deploying.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== VIEWER ===================== -->
+<div id="viewer">
+  <canvas id="confetti"></canvas>
+  <div class="vw-inner">
+    <div class="vw-from" id="vwFrom"></div>
+    <div id="vwStage1">
+      <p class="vw-teaser" id="vwTeaser">Someone has a secret…</p>
+      <button class="vw-orb" id="orb">Tap to<br/>reveal</button>
+    </div>
+    <div id="vwGuess" class="hidden">
+      <p class="vw-teaser">What's your guess?</p>
+      <div class="guess-row">
+        <button class="gg" data-guess="girl">Team Girl</button>
+        <button class="gb" data-guess="boy">Team Boy</button>
+      </div>
+    </div>
+    <div id="vwStage2" class="hidden">
+      <p class="vw-itsa" id="vwItsa">It's a</p>
+      <div class="vw-word" id="vwWord"></div>
+      <p class="vw-msg" id="vwMsg"></p>
+      <div class="vw-cta" id="vwCta"><a id="vwMakeOwn" href="#">✦ Make your own reveal</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================================================================
+   CONFIG — defaults. Everything here is overridable from the
+   Setup panel (gear icon) with no code editing.
+   ================================================================ */
+const DEFAULTS = {
+  brand: "Glimmer",
+  stripe: "https://buy.stripe.com/test_xxxxxxxx",   // your Stripe Payment Link
+  price: "$3"
+};
+/* read overrides from the URL (?brand=&stripe=&price=) so your
+   "live link" carries your setup without touching the file */
+function loadConfig(){
+  const q=new URLSearchParams(location.search);
+  return {
+    brand: q.get('brand') || DEFAULTS.brand,
+    stripe: q.get('stripe') || DEFAULTS.stripe,
+    price: q.get('price') || DEFAULTS.price
+  };
+}
+let CFG = loadConfig();
+
+/* ---------------- helpers ---------------- */
+const $ = s=>document.querySelector(s);
+const $$ = s=>[...document.querySelectorAll(s)];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1900);}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('Copied');}catch(e){toast('Long-press to copy');}}
+async function share(title,text,url){
+  if(navigator.share){try{await navigator.share({title,text,url});return;}catch(e){}}
+  copy(url);
+}
+function applyBrand(){
+  $('#brandName').textContent=CFG.brand; $('#brandFoot').textContent=CFG.brand;
+  $('#pvBrand').textContent=CFG.brand; $('#pricePill').textContent=CFG.price; $('#priceBtn').textContent=CFG.price;
+}
+applyBrand();
+
+/* ---------------- pack / unpack the secret into the link ---------------- */
+function pack(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).split('').reverse().join('');}
+function unpack(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.split('').reverse().join('')))));}catch(e){return null;}}
+
+/* ---------------- moods ---------------- */
+const MOODS={
+  Dreamy:{bg:'linear-gradient(160deg,#2b2440,#1b2a4a)',mood:'a little dream'},
+  Botanical:{bg:'linear-gradient(160deg,#22322a,#15241d)',mood:'something growing'},
+  "Golden hour":{bg:'linear-gradient(160deg,#3a2a30,#241a2e)',mood:'a warm secret'},
+  Midnight:{bg:'linear-gradient(160deg,#171528,#0e0c1c)',mood:'a quiet secret'},
+  Confetti:{bg:'linear-gradient(160deg,#2a2440,#3a2440)',mood:'a reason to celebrate'},
+};
+let mood='Dreamy';
+const moodsEl=$('#moods');
+Object.keys(MOODS).forEach((m,i)=>{const b=document.createElement('button');
+  b.className='chip'+(i===0?' on':'');b.textContent=m;
+  b.onclick=()=>{$$('#moods .chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');mood=m;};
+  moodsEl.appendChild(b);});
+
+/* ---------------- gender ---------------- */
+let gender=null;
+$$('#secret button').forEach(b=>{b.onclick=()=>{$$('#secret button').forEach(x=>x.classList.remove('on'));b.classList.add('on');gender=b.dataset.g;};});
+
+/* ================================================================
+   COPY GENERATOR (client-side). Swap for a real Claude call later.
+   ================================================================ */
+function pick(a,s){return a[Math.abs(s)%a.length];}
+function seedFrom(s){let h=0;for(const c of (s||'x'))h=(h*31+c.charCodeAt(0))|0;return h;}
+let annSeed=0;
+function genAnnouncement(g,from,seed){
+  const who=from||'We';const heShe=g==='girl'?'her':'him';const sheHe=g==='girl'?'she':'he';
+  const f=[
+    `It's official — ${who.toLowerCase()==='we'?'we':who} are over the moon to tell you a sweet little ${g} is on the way. We already can't stop imagining ${heShe}.`,
+    `The wait is over. ${who} couldn't keep it in any longer: it's a ${g}! Every dream we had just got a face and a whole lot of pink-or-blue.`,
+    `Two hearts, one enormous secret — and now it's yours too. A precious ${g} is joining the family, and ${sheHe} is already so loved.`,
+    `Surprise! Our family is growing by two tiny feet. It's a ${g}, and we're completely, hopelessly smitten already.`,
+    `We've been holding the happiest secret. Ready? It's a ${g} — and ${sheHe} already has us wrapped around ${heShe==='her'?'her':'his'} tiny finger.`,
+  ];
+  return pick(f,seed);
+}
+function genCaptions(g,seed){
+  const tag=g==='girl'?'#itsagirl':'#itsaboy';
+  const base=[
+    {n:'Sweet',t:`Pink or blue, our hearts already knew 💛 it's a ${g}! ${tag}`},
+    {n:'Funny',t:`Plot twist: we're outnumbered ${g==='girl'?'(send glitter)':'(send snacks)'}. It's a ${g}! ${tag}`},
+    {n:'Soft',t:`The best secret we've ever kept… and it's a ${g}. ${tag} #babyontheway`},
+  ];
+  const r=Math.abs(seed)%3;return base.slice(r).concat(base.slice(0,r));
+}
+function genCaptionsPro(g,seed){
+  const tag=g==='girl'?'#itsagirl':'#itsaboy';
+  const m=[
+    {n:'Poetic',t:`Some secrets are too lovely to keep — a ${g} is on the way to us. ${tag}`},
+    {n:'Bold',t:`Make room, world. A brand-new ${g} is incoming. ${tag} #babyloading`},
+    {n:'Grateful',t:`Counting fingers, toes, and blessings. It's a ${g} 🤍 ${tag}`},
+    {n:'Playful',t:`We asked the universe and it said: ${g}! ${tag}`},
+    {n:'Classic',t:`With hearts wide open, we welcome a little ${g}. ${tag}`},
+    {n:'Cozy',t:`Tiny socks, big love. A ${g} is joining us. ${tag}`},
+  ];
+  const r=Math.abs(seed)%m.length;return m.slice(r).concat(m.slice(0,r));
+}
+
+/* ================================================================
+   CREATE
+   ================================================================ */
+let current=null;
+function renderCaptions(targetSel, list){
+  const w=$(targetSel);w.innerHTML='';
+  list.forEach(c=>{const d=document.createElement('div');d.className='caption';
+    d.innerHTML=`<span class="n">${c.n}</span><span>${c.t}</span>`;w.appendChild(d);});
+}
+function paintAnnouncement(){
+  $('#announce').textContent=genAnnouncement(current.g,current.from,annSeed);
+}
+$('#makeBtn').onclick=()=>{
+  if(!gender){toast('Pick the secret first');window.scrollTo({top:0,behavior:'smooth'});return;}
+  const from=$('#from').value.trim(), userMsg=$('#msg').value.trim();
+  annSeed=seedFrom(from+gender+mood+userMsg);
+  const msg=userMsg||(gender==='girl'?"We can't wait to meet our girl.":"We can't wait to meet our boy.");
+  current={g:gender,from,mood,msg};
+
+  const m=MOODS[mood];
+  $('#pvScreen').style.background=m.bg;
+  $('#pvTeaser').textContent=from?`${from} have ${m.mood}…`:`Someone has ${m.mood}…`;
+  $('#pvBrand').textContent=CFG.brand;
+  paintAnnouncement();
+  renderCaptions('#captions',genCaptions(gender,annSeed));
+
+  $('#result').classList.remove('hidden');
+  $('#result').scrollIntoView({behavior:'smooth'});
+
+  const link=buildLink(false);
+  $('#copyLink').onclick=()=>copy(link);
+  $('#shareLink').onclick=()=>share(`${CFG.brand} reveal`,'Tap to reveal our secret 💛',link);
+  $('#copyAnnounce').onclick=()=>copy($('#announce').textContent);
+  $('#pvPhone').onclick=()=>{location.hash=pack(current);renderViewer();};
+};
+$('#rerollAnn').onclick=()=>{annSeed=(annSeed+7)|0;paintAnnouncement();};
+$('#startBtn').onclick=()=>$('#builder').scrollIntoView({behavior:'smooth'});
+
+function buildLink(guessFirst){
+  // keep the owner's ?brand/stripe/price config in the shared link
+  return location.origin+location.pathname+location.search+'#'+pack({...current,guess:!!guessFirst});
+}
+
+/* ---------------- sample / demo reveal ---------------- */
+const SAMPLE={g:'girl',from:'Mara & Jon',mood:'Dreamy',msg:'We can’t wait to meet our girl.'};
+$('#sampleBtn').onclick=()=>{location.hash=pack(SAMPLE);renderViewer();};
+
+/* ================================================================
+   PREMIUM (honor unlock — see notes to harden)
+   ================================================================ */
+$('#buyBtn').onclick=()=>{window.open(CFG.stripe,'_blank');$('#paidRow').style.display='block';toast('Opening secure checkout…');};
+$('#paidBtn').onclick=()=>unlockPremium();
+if(new URLSearchParams(location.search).get('unlocked')==='1'){ /* auto-unlock buyers redirected from Stripe */
+  window.addEventListener('load',()=>{ if(current) unlockPremium(); });
+}
+function unlockPremium(){
+  if(!current){toast('Create a reveal first');return;}
+  $('#premium').classList.remove('hidden');$('.lock').style.display='none';
+  buildCard();
+  renderCaptions('#captionsPro',genCaptionsPro(current.g,seedFrom(current.from+current.g)));
+  $('#copyGuess').onclick=()=>copy(buildLink(true));
+  $('#premium').scrollIntoView({behavior:'smooth'});toast('Unlocked ✦');
+}
+function buildCard(){
+  const c=$('#cardCanvas'),x=c.getContext('2d'),g=current.g;
+  const grad=x.createLinearGradient(0,0,0,1350);
+  if(g==='girl'){grad.addColorStop(0,'#FBE4EC');grad.addColorStop(1,'#F3C6D8');}
+  else{grad.addColorStop(0,'#E2EFFA');grad.addColorStop(1,'#BEDDF4');}
+  x.fillStyle=grad;x.fillRect(0,0,1080,1350);
+  x.textAlign='center';x.fillStyle='#241F33';x.font='700 46px Manrope,sans-serif';x.fillText("IT'S A",540,470);
+  x.font='600 200px Fraunces,Georgia,serif';x.fillStyle=g==='girl'?'#D86B92':'#3f7cb4';x.fillText(g.toUpperCase(),540,690);
+  x.fillStyle='#241F33';x.font='italic 40px Fraunces,Georgia,serif';wrapText(x,current.msg,540,840,760,52);
+  if(current.from){x.font='700 34px Manrope,sans-serif';x.fillStyle='#8A8296';x.fillText('— '+current.from,540,1180);}
+  x.font='700 26px Manrope,sans-serif';x.fillStyle='#A2824F';x.fillText(CFG.brand.toUpperCase(),540,1280);
+  const url=c.toDataURL('image/png');$('#cardPreview').src=url;
+  $('#dlCard').onclick=()=>{const a=document.createElement('a');a.href=url;a.download='reveal-card.png';a.click();};
+}
+function wrapText(ctx,t,cx,cy,maxW,lh){const ws=t.split(' ');let line='',y=cy;
+  for(const w of ws){const test=line+w+' ';if(ctx.measureText(test).width>maxW&&line){ctx.fillText(line.trim(),cx,y);line=w+' ';y+=lh;}else line=test;}
+  ctx.fillText(line.trim(),cx,y);}
+
+/* ================================================================
+   SETUP / PROMOTE sheet
+   ================================================================ */
+$('#gearBtn').onclick=()=>{
+  $('#cfgBrand').value=CFG.brand!==DEFAULTS.brand?CFG.brand:'';
+  $('#cfgStripe').value=CFG.stripe!==DEFAULTS.stripe?CFG.stripe:'';
+  $('#cfgPrice').value=CFG.price!==DEFAULTS.price?CFG.price:'';
+  buildPromo();$('#sheet').classList.add('open');
+};
+$('#closeSheet').onclick=()=>$('#sheet').classList.remove('open');
+$('#sheet').onclick=e=>{if(e.target===$('#sheet'))$('#sheet').classList.remove('open');};
+$('#tabSetup').onclick=()=>{$('#tabSetup').classList.add('on');$('#tabPromote').classList.remove('on');$('#paneSetup').classList.remove('hidden');$('#panePromote').classList.add('hidden');};
+$('#tabPromote').onclick=()=>{$('#tabPromote').classList.add('on');$('#tabSetup').classList.remove('on');$('#panePromote').classList.remove('hidden');$('#paneSetup').classList.add('hidden');};
+
+$('#applyCfg').onclick=()=>{
+  CFG={brand:$('#cfgBrand').value.trim()||DEFAULTS.brand,
+       stripe:$('#cfgStripe').value.trim()||DEFAULTS.stripe,
+       price:$('#cfgPrice').value.trim()||DEFAULTS.price};
+  applyBrand();toast('Applied');
+};
+function liveLink(){
+  const q=new URLSearchParams();
+  if(CFG.brand!==DEFAULTS.brand)q.set('brand',CFG.brand);
+  if(CFG.stripe!==DEFAULTS.stripe)q.set('stripe',CFG.stripe);
+  if(CFG.price!==DEFAULTS.price)q.set('price',CFG.price);
+  const qs=q.toString();
+  return location.origin+location.pathname+(qs?'?'+qs:'');
+}
+$('#copyLive').onclick=()=>{ $('#applyCfg').onclick(); copy(liveLink()); };
+$('#copyDemo').onclick=()=>copy(liveLink()+'#'+pack(SAMPLE));
+
+function buildPromo(){
+  const b=CFG.brand;
+  const promos=[
+    {n:'Hook',t:`POV: you found the easiest way to do a gender reveal 🩷🩵 Make a link, send it to the family, everyone taps at once. Try ${b}.`},
+    {n:'Story',t:`We live 3 states from our parents — so we sent them a link. One tap and grandma cried 🥹 ${b} made the whole moment.`},
+    {n:'Ad',t:`Reveal your baby's gender in 60 seconds. No app, no party planning. A link that lights up pink or blue. ${b}.`},
+  ];
+  const w=$('#promoList');w.innerHTML='';
+  promos.forEach(p=>{const d=document.createElement('div');d.className='caption';
+    d.style.cursor='pointer';d.innerHTML=`<span class="n">${p.n}</span><span>${p.t}</span>`;
+    d.onclick=()=>copy(p.t);w.appendChild(d);});
+}
+
+/* ================================================================
+   VIEWER
+   ================================================================ */
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function renderViewer(){
+  const data=unpack(location.hash.slice(1));
+  if(!data||!data.g){$('#viewer').style.display='none';$('#creator').style.display='block';return;}
+  $('#creator').style.display='none';
+  const V=$('#viewer');V.style.display='flex';
+  const m=MOODS[data.mood]||MOODS.Dreamy;V.style.background=m.bg;
+  $('#vwFrom').textContent=data.from||'';
+  $('#vwTeaser').textContent=data.from?`${data.from} have ${m.mood}…`:`Someone has ${m.mood}…`;
+  $('#vwStage1').classList.remove('hidden');$('#vwStage2').classList.add('hidden');$('#vwGuess').classList.add('hidden');
+  $('#vwItsa').className='vw-itsa';$('#vwWord').className='vw-word';$('#vwWord').style.opacity=0;$('#vwMsg').className='vw-msg';$('#vwCta').className='vw-cta';
+  if(data.guess){
+    $('#vwStage1').classList.add('hidden');$('#vwGuess').classList.remove('hidden');
+    $$('#vwGuess button').forEach(b=>b.onclick=()=>{$('#vwGuess').classList.add('hidden');$('#vwStage1').classList.remove('hidden');});
+  }
+  $('#orb').onclick=()=>runReveal(data);
+  $('#vwMakeOwn').onclick=$('#ctaMake').onclick=e=>{e.preventDefault();location.hash='';location.reload();};
+}
+function runReveal(data){
+  if(reduce){showWord(data);return;}
+  const orb=$('#orb');let n=0;
+  (function tick(){orb.classList.remove('pulse');void orb.offsetWidth;orb.classList.add('pulse');n++;
+    if(n<3)setTimeout(tick,560);else setTimeout(()=>showWord(data),520);})();
+}
+function showWord(data){
+  $('#vwStage1').classList.add('hidden');$('#vwGuess').classList.add('hidden');
+  const V=$('#viewer');
+  V.style.background=data.g==='girl'?'linear-gradient(165deg,#E78BA6,#C25E84)':'linear-gradient(165deg,#6FA8DC,#3f7cb4)';
+  $('#vwStage2').classList.remove('hidden');
+  const word=$('#vwWord');word.textContent=data.g.toUpperCase();$('#vwMsg').textContent=data.msg||'';
+  $('#vwItsa').classList.add('fade-up');
+  setTimeout(()=>word.classList.add('reveal-show'),180);
+  setTimeout(()=>$('#vwMsg').classList.add('fade-up'),900);
+  setTimeout(()=>$('#vwCta').classList.add('fade-up'),1500);
+  if(!reduce)burst(data.g);
+}
+function burst(g){
+  const cv=$('#confetti'),ctx=cv.getContext('2d');const DPR=Math.min(devicePixelRatio||1,2);
+  cv.width=innerWidth*DPR;cv.height=innerHeight*DPR;ctx.scale(DPR,DPR);
+  const W=innerWidth,H=innerHeight;
+  const pal=g==='girl'?['#E78BA6','#FBE4EC','#F7B7CD','#FFF','#D86B92']:['#6FA8DC','#E2EFFA','#A9D0F0','#FFF','#3f7cb4'];
+  const P=[];
+  for(let i=0;i<170;i++)P.push({x:W/2,y:H*0.42,vx:(Math.random()-.5)*14,vy:(Math.random()*-15)-4,
+    g:.32+Math.random()*.2,s:6+Math.random()*7,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3,c:pal[i%pal.length],life:1});
+  let frame=0;
+  (function loop(){ctx.clearRect(0,0,W,H);
+    if(frame%4===0&&frame<260)P.push({x:Math.random()*W,y:-10,vx:(Math.random()-.5)*1.2,vy:1+Math.random()*1.6,
+      g:.02,s:5+Math.random()*5,rot:Math.random()*6.28,vr:(Math.random()-.5)*.12,c:pal[(Math.random()*pal.length)|0],life:1});
+    for(const p of P){p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.rot+=p.vr;if(p.y>H+20)p.life=0;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,Math.min(1,p.life));
+      ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore();}
+    for(let i=P.length-1;i>=0;i--)if(!P[i].life)P.splice(i,1);
+    frame++;if(P.length)requestAnimationFrame(loop);else ctx.clearRect(0,0,W,H);})();
+}
+
+/* ---------------- boot ---------------- */
+window.addEventListener('hashchange',()=>{if(location.hash.length>1)renderViewer();});
+if(location.hash.length>1)renderViewer();
+</script>
+</body>
+</html>
