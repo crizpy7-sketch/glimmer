@@ -321,19 +321,20 @@
 
     <div class="lock">
       <span class="badge">Most loved</span>
-      <h4>✦ Premium bundle <span class="price-pill" id="pricePill">$3</span></h4>
+      <h4>✦ Premium bundle <span class="price-pill" id="pricePill">$2.99</span></h4>
       <div class="value-line"><span class="was" id="wasPrice">$19</span><span class="save">Save 84% today</span></div>
       <div class="card-peek" id="cardPeek">
         <img id="lockCardImg" alt="Preview of your printable announcement card" />
         <div class="peek-veil"><span>🔒 Your printable card — unlock to download</span></div>
       </div>
       <ul>
-        <li>A <b>printable announcement card</b> — high-res, frame-ready PNG</li>
+        <li>A <b>printable announcement card</b> — high-res, frame-ready (4:5)</li>
+        <li>A <b>matching phone &amp; Instagram-Story wallpaper</b> (9:16)</li>
         <li id="lockGuessLi">A <b>"guess the gender"</b> link to build hype before the big reveal</li>
         <li><b>Six more captions</b> in every tone — sweet, funny, poetic, bold</li>
-        <li><b>Keepsake forever</b> — download and reprint anytime</li>
+        <li><b>Yours to keep forever</b> — re-download &amp; reprint anytime</li>
       </ul>
-      <button class="btn btn-gold" id="buyBtn">Unlock everything · <span id="priceBtn">$3</span></button>
+      <button class="btn btn-gold" id="buyBtn">Unlock everything · <span id="priceBtn">$2.99</span></button>
       <p class="scarcity">💛 Most families unlock the bundle — it's the part they keep.</p>
       <div class="guarantee">
         <span class="gi">✓</span>
@@ -349,7 +350,13 @@
       <div class="gen-block"><div class="gh"><h3>Printable card</h3></div>
         <canvas id="cardCanvas" width="1080" height="1350" style="display:none"></canvas>
         <img id="cardPreview" style="width:100%;border-radius:14px;border:1px solid var(--line);margin-top:6px" alt="Announcement card" />
-        <button class="btn btn-gold btn-sm" id="dlCard" style="margin-top:10px;width:100%">Download card</button>
+        <button class="btn btn-gold btn-sm" id="dlCard" style="margin-top:10px;width:100%">Download card · 4:5 print</button>
+      </div>
+      <div class="gen-block"><div class="gh"><h3>Phone &amp; Story wallpaper</h3></div>
+        <p class="hint" style="margin-top:0">A 9:16 version for your lock screen and Instagram Stories.</p>
+        <canvas id="wallCanvas" width="1080" height="1920" style="display:none"></canvas>
+        <img id="wallPreview" style="width:62%;border-radius:14px;border:1px solid var(--line);margin-top:8px;display:block" alt="Phone wallpaper" />
+        <button class="btn btn-gold btn-sm" id="dlWall" style="margin-top:10px;width:100%">Download wallpaper · 9:16</button>
       </div>
       <div class="gen-block" id="guessBlock"><div class="gh"><h3>Guess-first link</h3></div>
         <p class="hint" style="margin-top:0">Send this before the reveal — guests lock in boy or girl, then you drop the real link.</p>
@@ -454,7 +461,7 @@
 const DEFAULTS = {
   brand: "Glimmer",
   stripe: "https://buy.stripe.com/test_xxxxxxxx",   // your Stripe Payment Link
-  price: "$3"
+  price: "$2.99"
 };
 /* read overrides from the URL (?brand=&stripe=&price=) so your
    "live link" carries your setup without touching the file.
@@ -849,34 +856,44 @@ function unlockPremium(){
   if(hasG)$('#copyGuess').onclick=()=>copy(buildLink(true));
   $('#premium').scrollIntoView({behavior:'smooth'});toast('Unlocked ✦');
 }
-/* draws the printable card and returns a PNG data-URL (no side effects)
-   — reused for both the blurred locked preview and the real download */
-function drawCard(){
-  const c=$('#cardCanvas'),x=c.getContext('2d'),o=OCCASIONS[current.o];
-  let top,bot,word,wordColor,itsa;
-  if(o.hasGender){
-    const g=current.g;
-    if(g==='girl'){top='#FBE4EC';bot='#F3C6D8';wordColor='#D86B92';}
-    else{top='#E2EFFA';bot='#BEDDF4';wordColor='#3f7cb4';}
-    word=g.toUpperCase();itsa="IT'S A";
-  }else{
-    top=o.card[0];bot=o.card[1];wordColor=o.cardWord;word=o.word;itsa=o.itsa.toUpperCase();
-  }
-  const grad=x.createLinearGradient(0,0,0,1350);
-  grad.addColorStop(0,top);grad.addColorStop(1,bot);
-  x.fillStyle=grad;x.fillRect(0,0,1080,1350);
-  x.textAlign='center';x.fillStyle='#241F33';x.font='700 46px Manrope,sans-serif';x.fillText(itsa,540,470);
-  // auto-fit the headline so longer words (EXPECTING/ENGAGED) never overflow
-  let px=200;do{x.font='600 '+px+'px Fraunces,Georgia,serif';if(x.measureText(word).width<=920)break;px-=8;}while(px>56);
-  x.fillStyle=wordColor;x.fillText(word,540,680);
-  x.fillStyle='#241F33';x.font='italic 40px Fraunces,Georgia,serif';wrapText(x,current.msg,540,840,760,52);
-  if(current.from){x.font='700 34px Manrope,sans-serif';x.fillStyle='#8A8296';x.fillText('— '+current.from,540,1180);}
-  x.font='700 26px Manrope,sans-serif';x.fillStyle='#A2824F';x.fillText(CFG.brand.toUpperCase(),540,1280);
+/* shared look for every printable: colours come from the occasion */
+function cardColors(){
+  const o=OCCASIONS[current.o];
+  if(o.hasGender) return current.g==='girl'
+    ? {top:'#FBE4EC',bot:'#F3C6D8',word:'#D86B92',itsa:"IT'S A",label:'GIRL'}
+    : {top:'#E2EFFA',bot:'#BEDDF4',word:'#3f7cb4',itsa:"IT'S A",label:'BOY'};
+  return {top:o.card[0],bot:o.card[1],word:o.cardWord,itsa:o.itsa.toUpperCase(),label:o.word};
+}
+function roundRect(x,X,Y,w,h,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);
+  x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath();}
+function dots(x,cx,y,c){x.fillStyle=c;[-24,0,24].forEach(d=>{x.beginPath();x.arc(cx+d,y,5,0,6.28);x.fill();});}
+function fitHead(x,word,maxW,start){let px=start;do{x.font='600 '+px+'px Fraunces,Georgia,serif';
+  if(x.measureText(word).width<=maxW)break;px-=8;}while(px>52);}
+/* renders one keepsake at the given size; returns a PNG data-URL */
+function renderKeepsake(c,W,H){
+  const x=c.getContext('2d'),cc=cardColors(),cx=W/2;
+  const grad=x.createLinearGradient(0,0,0,H);grad.addColorStop(0,cc.top);grad.addColorStop(1,cc.bot);
+  x.fillStyle=grad;x.fillRect(0,0,W,H);
+  x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=4;roundRect(x,W*0.04,H*0.03,W*0.92,H*0.94,30);x.stroke();
+  const mid=H*0.42;                       // vertical anchor for the headline
+  x.textAlign='center';
+  x.fillStyle='#241F33';x.font='700 46px Manrope,sans-serif';x.fillText(cc.itsa,cx,mid-150);
+  dots(x,cx,mid-105,cc.word);
+  fitHead(x,cc.label,W*0.84,200);x.fillStyle=cc.word;x.fillText(cc.label,cx,mid+60);
+  x.fillStyle='#241F33';x.font='italic 40px Fraunces,Georgia,serif';wrapText(x,current.msg,cx,mid+210,W*0.7,52);
+  if(current.from){x.font='700 34px Manrope,sans-serif';x.fillStyle='#8A8296';x.fillText('— '+current.from,cx,H-H*0.13);}
+  x.font='700 26px Manrope,sans-serif';x.fillStyle='#A2824F';x.fillText(CFG.brand.toUpperCase(),cx,H-H*0.055);
   return c.toDataURL('image/png');
 }
+/* the locked-preview + printable card share this 4:5 print size */
+function drawCard(){return renderKeepsake($('#cardCanvas'),1080,1350);}
+function dl(url,name){const a=document.createElement('a');a.href=url;a.download=name;a.click();}
 function buildCard(){
-  const url=drawCard();$('#cardPreview').src=url;
-  $('#dlCard').onclick=()=>{const a=document.createElement('a');a.href=url;a.download='reveal-card.png';a.click();};
+  const card=drawCard();$('#cardPreview').src=card;
+  $('#dlCard').onclick=()=>dl(card,'reveal-card.png');
+  const wall=renderKeepsake($('#wallCanvas'),1080,1920);     // 9:16 phone & Story
+  $('#wallPreview').src=wall;
+  $('#dlWall').onclick=()=>dl(wall,'reveal-wallpaper.png');
 }
 function wrapText(ctx,t,cx,cy,maxW,lh){const ws=t.split(' ');let line='',y=cy;
   for(const w of ws){const test=line+w+' ';if(ctx.measureText(test).width>maxW&&line){ctx.fillText(line.trim(),cx,y);line=w+' ';y+=lh;}else line=test;}
