@@ -531,7 +531,7 @@ const OCCASIONS={
   },
   pregnancy:{
     label:'Pregnancy', hasGender:false, itsa:"We're", word:'EXPECTING',
-    reveal:'linear-gradient(165deg,#E9C9A0,#C2A878)',
+    reveal:'linear-gradient(165deg,#BE9150,#8A6328)',
     card:['#F6ECDD','#E9C9A0'], cardWord:'#A2824F',
     pal:['#C2A878','#F4E6C6','#FFFFFF','#E9C9A0','#A2824F'],
     defaultMsg:'Our family is growing by two tiny feet.',
@@ -556,7 +556,7 @@ const OCCASIONS={
   },
   engagement:{
     label:'Engagement', hasGender:false, itsa:"We're", word:'ENGAGED',
-    reveal:'linear-gradient(165deg,#E8B7C0,#C98AA0)',
+    reveal:'linear-gradient(165deg,#C97E97,#9E5470)',
     card:['#FBEAE4','#E8B7C0'], cardWord:'#B36880',
     pal:['#E8B7C0','#F4E6C6','#FFFFFF','#C98AA0','#C2A878'],
     defaultMsg:'Forever just got a date.',
@@ -581,7 +581,7 @@ const OCCASIONS={
   },
   moving:{
     label:"We're moving", hasGender:false, itsa:"We're", word:'MOVING',
-    reveal:'linear-gradient(165deg,#7FB39A,#3E7D63)',
+    reveal:'linear-gradient(165deg,#5E9C81,#2E6650)',
     card:['#E7F1EA','#9BC9B3'], cardWord:'#3E7D63',
     pal:['#7FB39A','#CDE8DA','#FFFFFF','#3E7D63','#C2A878'],
     defaultMsg:'New address, same us. The door is always open.',
@@ -631,7 +631,7 @@ const OCCASIONS={
   },
   newhome:{
     label:'New home', hasGender:false, itsa:"We're", word:'HOMEOWNERS',
-    reveal:'linear-gradient(165deg,#C9A07E,#8a5a3a)',
+    reveal:'linear-gradient(165deg,#B07E54,#73471F)',
     card:['#F1E7DD','#D8B89A'], cardWord:'#8a5a3a',
     pal:['#C9A07E','#F4E6C6','#FFFFFF','#8a5a3a','#9BC9B3'],
     defaultMsg:'New keys, new memories. The door is always open.',
@@ -749,6 +749,20 @@ function curCaptionsPro(seed){
   if(current.o==='gender') return genCaptionsPro(current.g,seed);
   return rotate(OCCASIONS[current.o].captionsPro(),seed);
 }
+/* a personalized, signed caption built from the name they typed —
+   makes the post they share feel custom rather than templated */
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function personalLead(){
+  if(!current.from) return null;
+  const o=OCCASIONS[current.o];
+  const tag=o.hasGender?(current.g==='girl'?'#itsagirl':'#itsaboy'):o.tag;
+  const phrase=o.hasGender?`it's a ${current.g}`:{
+    pregnancy:"we're expecting",engagement:"we're engaged",moving:"we're moving",
+    graduation:'we did it',newhome:"we're homeowners",holiday:'happy holidays'
+  }[current.o]||'big news';
+  return {n:'Personal',t:`${cap(phrase)}! 💛 With love, ${current.from}. ${tag}`};
+}
+function withPersonal(list){const lead=personalLead();return lead?[lead,...list]:list;}
 
 /* ================================================================
    CREATE
@@ -781,7 +795,7 @@ $('#makeBtn').onclick=()=>{
   $('#pvTeaser').textContent=from?`${from} have ${m.mood}…`:`Someone has ${m.mood}…`;
   $('#pvBrand').textContent=CFG.brand;
   paintAnnouncement();
-  renderCaptions('#captions',curCaptions(annSeed));
+  renderCaptions('#captions',withPersonal(curCaptions(annSeed)));
 
   $('#result').classList.remove('hidden');
   $('#result').scrollIntoView({behavior:'smooth'});
@@ -943,11 +957,19 @@ function showWord(data){
   $('#vwStage2').classList.remove('hidden');
   $('#vwItsa').textContent=o.itsa;
   const wordEl=$('#vwWord');wordEl.textContent=word;$('#vwMsg').textContent=data.msg||'';
+  fitWord(wordEl);
   $('#vwItsa').classList.add('fade-up');
   setTimeout(()=>wordEl.classList.add('reveal-show'),180);
   setTimeout(()=>$('#vwMsg').classList.add('fade-up'),900);
   setTimeout(()=>$('#vwCta').classList.add('fade-up'),1500);
   if(!reduce){burst(data);chime();}
+}
+/* shrink the reveal word until a long one (EXPECTING/HOMEOWNERS) fits the screen */
+function fitWord(el){
+  el.style.fontSize='';
+  const avail=(el.parentElement.clientWidth||innerWidth-64)-4;
+  let size=parseFloat(getComputedStyle(el).fontSize)||80,guard=40;
+  while(el.scrollWidth>avail && size>22 && guard-->0){size-=4;el.style.fontSize=size+'px';}
 }
 /* a soft ascending chime at the reveal — synthesized, no audio file.
    The orb tap is a user gesture, so playback is allowed. */
