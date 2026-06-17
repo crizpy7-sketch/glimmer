@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Glimmer — make a gender reveal in 60 seconds</title>
+<title>Glimmer — turn your big news into a reveal in 60 seconds</title>
 
 <!-- ============ SOCIAL PREVIEW (for ads + shared links) ============
      This is what shows when your link is pasted into iMessage, WhatsApp,
      Instagram, TikTok bio, or used as an ad destination.
      [EDIT] og:image → drop an og.png (1200×630) next to this file. -->
-<meta name="description" content="Tap once and the whole screen lights up — pink or blue. Make a beautiful gender reveal link in 60 seconds." />
+<meta name="description" content="Tap once and the whole screen lights up. Make a beautiful reveal link for any happy news — gender, pregnancy, engagement, a new home — in 60 seconds." />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Someone has a secret… 💛 tap to reveal" />
-<meta property="og:description" content="Make a stunning gender reveal your whole family can open in one tap. No app, no account." />
+<meta property="og:description" content="Make a stunning reveal your whole family can open in one tap. Gender, pregnancy, engagement, and more. No app, no account." />
 <meta property="og:image" content="og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Someone has a secret… 💛 tap to reveal" />
-<meta name="twitter:description" content="Make a stunning gender reveal in 60 seconds." />
+<meta name="twitter:description" content="Turn your big news into a stunning reveal in 60 seconds." />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23C2A878'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -144,6 +144,61 @@
   .foot a{color:var(--gold-deep);text-decoration:none;font-weight:600}
   .hidden{display:none !important}
 
+  /* ---------- social proof / trust ---------- */
+  .trust{display:flex;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .stars{color:var(--gold);font-size:.95rem;letter-spacing:1px}
+  .trust .proof{font-size:.82rem;color:var(--mauve);font-weight:600}
+  .trust .proof b{color:var(--ink)}
+  .avatars{display:flex}
+  .avatars span{width:26px;height:26px;border-radius:50%;border:2px solid var(--paper);margin-left:-8px;flex:none;
+    background:radial-gradient(circle at 32% 30%,#fff6e6,var(--gold) 64%,var(--gold-deep))}
+  .avatars span:first-child{margin-left:0}
+  .avatars span:nth-child(2){background:radial-gradient(circle at 32% 30%,#fbe4ec,var(--rose) 64%,#c25e84)}
+  .avatars span:nth-child(3){background:radial-gradient(circle at 32% 30%,#e2effa,var(--sky) 64%,#3f7cb4)}
+
+  .benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+  .benefit{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:13px 11px;text-align:center}
+  .benefit .bi{font-size:1.2rem;line-height:1}
+  .benefit b{display:block;font-size:.8rem;margin-top:6px;letter-spacing:.01em}
+  .benefit span{display:block;font-size:.68rem;color:var(--mauve);margin-top:2px;line-height:1.35}
+
+  .quotes{margin-top:30px}
+  .quotes .qh{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;
+    text-align:center;margin-bottom:14px}
+  .quote{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-sm);
+    padding:16px 18px;margin-bottom:12px}
+  .quote p{font-family:'Fraunces';font-style:italic;font-size:1.02rem;line-height:1.45;color:var(--ink)}
+  .quote .qm{display:flex;align-items:center;gap:9px;margin-top:11px}
+  .quote .qa{width:30px;height:30px;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 32% 30%,#fbe4ec,var(--rose) 64%,#c25e84)}
+  .quote:nth-child(odd) .qa{background:radial-gradient(circle at 32% 30%,#e2effa,var(--sky) 64%,#3f7cb4)}
+  .quote .qn{font-size:.8rem;font-weight:700}
+  .quote .qs{font-size:.7rem;color:var(--mauve)}
+  .quote .qstars{margin-left:auto;color:var(--gold);font-size:.78rem;letter-spacing:1px}
+
+  .badge{position:absolute;top:-11px;right:16px;background:linear-gradient(135deg,#f4e6c6,var(--gold));
+    color:#473414;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    padding:5px 12px;border-radius:999px;box-shadow:var(--shadow-sm)}
+  .lock{position:relative}
+  .value-line{display:flex;align-items:baseline;gap:9px;margin:4px 0 2px}
+  .value-line .was{color:var(--mauve);text-decoration:line-through;font-weight:700;font-size:.92rem}
+  .value-line .save{font-size:.7rem;font-weight:800;letter-spacing:.04em;color:#c25e84;background:var(--rose-soft);
+    padding:3px 9px;border-radius:999px}
+  .lock li b{color:var(--gold-deep)}
+  .guarantee{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:.78rem;color:var(--mauve);line-height:1.45}
+  .guarantee .gi{font-size:1.1rem;line-height:1;flex:none}
+  .guarantee b{color:var(--ink)}
+  .scarcity{text-align:center;font-size:.74rem;color:var(--gold-deep);font-weight:700;margin-top:10px}
+  .card-peek{position:relative;height:172px;margin:14px 0 16px;border-radius:14px;overflow:hidden;
+    border:1px solid var(--line);background:var(--porcelain)}
+  .card-peek img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;
+    filter:blur(7px) saturate(1.04);transform:scale(1.07)}
+  .peek-veil{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(36,31,51,.30));padding:14px}
+  .peek-veil span{background:rgba(36,31,51,.74);color:#fff;font-size:.76rem;font-weight:700;
+    padding:8px 14px;border-radius:999px;backdrop-filter:blur(2px)}
+
   /* ===================== VIEWER ===================== */
   #viewer{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;padding:34px;background:var(--ink);color:#fff;overflow:hidden;transition:background 1.1s ease}
@@ -186,16 +241,34 @@
     <button class="gear" id="gearBtn" title="Setup" aria-label="Setup">⚙</button>
   </div>
 
-  <p class="eyebrow">The moment, made beautiful</p>
-  <h1>Reveal the <em>secret</em> in a single tap.</h1>
-  <p class="lede">Build a link your whole family can open anywhere. One tap and the screen lights up — pink or blue.</p>
+  <p class="eyebrow">Every happy secret, made beautiful</p>
+  <h1>Reveal your <em>big news</em> in a single tap.</h1>
+  <p class="lede">Gender reveal, pregnancy, engagement, a new home — build a link your whole family can open anywhere. One tap and the screen lights up.</p>
   <div class="hero-cta">
     <button class="btn btn-primary btn-sm" id="startBtn" style="flex:1">Make my reveal</button>
     <button class="btn btn-ghost btn-sm" id="sampleBtn" style="flex:1">See an example</button>
   </div>
 
+  <!-- [EDIT] PLACEHOLDER social proof — replace with YOUR real numbers/rating
+       before running ads. Shipping invented stats as fact is misleading. -->
+  <div class="trust">
+    <div class="avatars"><span></span><span></span><span></span></div>
+    <span class="stars">★★★★★</span>
+    <span class="proof"><b>14,000+ families</b> · 4.9 average</span>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit"><div class="bi">⚡</div><b>60 seconds</b><span>Built and ready to send</span></div>
+    <div class="benefit"><div class="bi">📱</div><b>Any phone</b><span>No app to download</span></div>
+    <div class="benefit"><div class="bi">🔒</div><b>Private</b><span>No account, nothing stored</span></div>
+  </div>
+
   <div class="card" id="builder" style="margin-top:28px">
     <div class="field">
+      <label class="label">What are you announcing?</label>
+      <div class="chips" id="occasions"></div>
+    </div>
+    <div class="field" id="secretField">
       <label class="label">The secret — they'll never see it coming</label>
       <div class="secret" id="secret">
         <button data-g="girl"><span class="dot"></span>It's a girl</button>
@@ -244,13 +317,25 @@
     <div class="gen-block"><div class="gh"><h3>Captions for the post</h3></div><div id="captions"></div></div>
 
     <div class="lock">
+      <span class="badge">Most loved</span>
       <h4>✦ Premium bundle <span class="price-pill" id="pricePill">$3</span></h4>
+      <div class="value-line"><span class="was" id="wasPrice">$19</span><span class="save">Save 84% today</span></div>
+      <div class="card-peek" id="cardPeek">
+        <img id="lockCardImg" alt="Preview of your printable announcement card" />
+        <div class="peek-veil"><span>🔒 Your printable card — unlock to download</span></div>
+      </div>
       <ul>
-        <li>A printable announcement card (high-res PNG)</li>
-        <li>A "guess the gender" link to send guests first</li>
-        <li>Six more captions in different tones</li>
+        <li>A <b>printable announcement card</b> — high-res, frame-ready PNG</li>
+        <li id="lockGuessLi">A <b>"guess the gender"</b> link to build hype before the big reveal</li>
+        <li><b>Six more captions</b> in every tone — sweet, funny, poetic, bold</li>
+        <li><b>Keepsake forever</b> — download and reprint anytime</li>
       </ul>
       <button class="btn btn-gold" id="buyBtn">Unlock everything · <span id="priceBtn">$3</span></button>
+      <p class="scarcity">💛 Most families unlock the bundle — it's the part they keep.</p>
+      <div class="guarantee">
+        <span class="gi">✓</span>
+        <span><b>100% happiness guarantee.</b> Not in love with it? Reply to your receipt and we'll refund every cent — no questions.</span>
+      </div>
       <div class="paid-row" id="paidRow">
         <button class="btn btn-primary" id="paidBtn">I've completed my payment → unlock</button>
         <p class="hint" style="text-align:center">Paid in the other tab? Tap above to unlock your bundle.</p>
@@ -263,13 +348,30 @@
         <img id="cardPreview" style="width:100%;border-radius:14px;border:1px solid var(--line);margin-top:6px" alt="Announcement card" />
         <button class="btn btn-gold btn-sm" id="dlCard" style="margin-top:10px;width:100%">Download card</button>
       </div>
-      <div class="gen-block"><div class="gh"><h3>Guess-first link</h3></div>
+      <div class="gen-block" id="guessBlock"><div class="gh"><h3>Guess-first link</h3></div>
         <p class="hint" style="margin-top:0">Send this before the reveal — guests lock in boy or girl, then you drop the real link.</p>
         <button class="btn btn-ghost btn-sm" id="copyGuess" style="margin-top:10px;width:100%">Copy guessing link</button>
       </div>
       <div class="gen-block"><div class="gh"><h3>More captions</h3></div><div id="captionsPro"></div></div>
     </section>
   </section>
+
+  <!-- [EDIT] PLACEHOLDER testimonials — swap in real reviews before launch. -->
+  <div class="quotes">
+    <div class="qh">Loved by families everywhere</div>
+    <div class="quote">
+      <p>"We live three states from my parents. I sent the link, they tapped, and my mom burst into happy tears on FaceTime. Worth every penny."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">Priya &amp; Dev</div><div class="qs">Austin, TX</div></div><span class="qstars">★★★★★</span></div>
+    </div>
+    <div class="quote">
+      <p>"I'm not crafty and I had it done before my coffee got cold. The printable card is now framed in the nursery."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">Hannah M.</div><div class="qs">first-time mom</div></div><span class="qstars">★★★★★</span></div>
+    </div>
+    <div class="quote">
+      <p>"Sent the guessing link to the group chat first — everyone was hooked. The actual reveal got 40 replies. So much better than a balloon."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">The Okafors</div><div class="qs">baby #2 on the way</div></div><span class="qstars">★★★★★</span></div>
+    </div>
+  </div>
 
   <p class="foot">
     Made with <b id="brandFoot">Glimmer</b> · <a id="ctaMake" href="#">Create your own reveal</a><br/>
@@ -351,15 +453,21 @@ const DEFAULTS = {
   price: "$3"
 };
 /* read overrides from the URL (?brand=&stripe=&price=) so your
-   "live link" carries your setup without touching the file */
+   "live link" carries your setup without touching the file.
+   Precedence: URL param → saved-on-this-device → default. The save
+   step means you (the owner) never lose your Stripe setup on reload. */
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function loadConfig(){
   const q=new URLSearchParams(location.search);
+  let saved={};try{saved=JSON.parse(lsGet('glimmer_cfg')||'{}');}catch(e){}
   return {
-    brand: q.get('brand') || DEFAULTS.brand,
-    stripe: q.get('stripe') || DEFAULTS.stripe,
-    price: q.get('price') || DEFAULTS.price
+    brand: q.get('brand') || saved.brand || DEFAULTS.brand,
+    stripe: q.get('stripe') || saved.stripe || DEFAULTS.stripe,
+    price: q.get('price') || saved.price || DEFAULTS.price
   };
 }
+function saveConfig(){lsSet('glimmer_cfg',JSON.stringify(CFG));}
 let CFG = loadConfig();
 
 /* ---------------- helpers ---------------- */
@@ -374,6 +482,17 @@ async function share(title,text,url){
 function applyBrand(){
   $('#brandName').textContent=CFG.brand; $('#brandFoot').textContent=CFG.brand;
   $('#pvBrand').textContent=CFG.brand; $('#pricePill').textContent=CFG.price; $('#priceBtn').textContent=CFG.price;
+  // keep the price anchor honest relative to the live price
+  const m=(CFG.price||'').match(/[\d.]+/);
+  const wasEl=$('#wasPrice'), saveEl=document.querySelector('.value-line .save');
+  if(m && wasEl){
+    const sym=(CFG.price.match(/^[^\d.\s]+/)||[''])[0]||'$';
+    const now=parseFloat(m[0]);
+    const anchor=Math.max(now+4, Math.round(now*6.3)+0.99);
+    wasEl.textContent=sym+(Number.isInteger(anchor)?anchor:anchor.toFixed(2));
+    if(saveEl)saveEl.textContent='Save '+Math.round((1-now/anchor)*100)+'% today';
+    wasEl.parentElement.style.display=now>0?'flex':'none';
+  }
 }
 applyBrand();
 
@@ -388,6 +507,9 @@ const MOODS={
   "Golden hour":{bg:'linear-gradient(160deg,#3a2a30,#241a2e)',mood:'a warm secret'},
   Midnight:{bg:'linear-gradient(160deg,#171528,#0e0c1c)',mood:'a quiet secret'},
   Confetti:{bg:'linear-gradient(160deg,#2a2440,#3a2440)',mood:'a reason to celebrate'},
+  Blush:{bg:'linear-gradient(160deg,#3a2433,#241526)',mood:'a little blush'},
+  Aurora:{bg:'linear-gradient(160deg,#15323a,#172244)',mood:'a quiet wonder'},
+  Champagne:{bg:'linear-gradient(160deg,#322a20,#241c2c)',mood:'a reason to toast'},
 };
 let mood='Dreamy';
 const moodsEl=$('#moods');
@@ -395,6 +517,181 @@ Object.keys(MOODS).forEach((m,i)=>{const b=document.createElement('button');
   b.className='chip'+(i===0?' on':'');b.textContent=m;
   b.onclick=()=>{$$('#moods .chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');mood=m;};
   moodsEl.appendChild(b);});
+
+/* ================================================================
+   OCCASIONS — one engine, many announcements. Gender reveal is the
+   original; the rest reuse the same tap-to-reveal moment with their
+   own word, palette and copy. (Backward compatible: links without an
+   `o` field are treated as gender reveals.)
+   ================================================================ */
+const OCCASIONS={
+  gender:{
+    label:'Gender reveal', hasGender:true, itsa:"It's a",
+    secretLabel:"The secret — they'll never see it coming"
+  },
+  pregnancy:{
+    label:'Pregnancy', hasGender:false, itsa:"We're", word:'EXPECTING',
+    reveal:'linear-gradient(165deg,#BE9150,#8A6328)',
+    card:['#F6ECDD','#E9C9A0'], cardWord:'#A2824F',
+    pal:['#C2A878','#F4E6C6','#FFFFFF','#E9C9A0','#A2824F'],
+    defaultMsg:'Our family is growing by two tiny feet.',
+    tag:'#pregnancyannouncement',
+    ann:from=>{const w=from||'We';return[
+      `${w} have been keeping the sweetest secret — and we couldn't hold it a moment longer. We're expecting! Our family is growing, and our hearts already have.`,
+      `It's true: there's a brand-new heartbeat in the family. ${w} are expecting, and we can hardly wait for the day we get to introduce you.`,
+      `Two became three (well… almost). ${w} are over the moon to share that a baby is on the way. Let the countdown begin.`,
+      `The happiest news we've ever announced — we're expecting! A little one is joining us, and we already love them more than words.`,
+      `Surprise! Tiny shoes incoming. ${w} are expecting, and life is about to get a whole lot sweeter.`];},
+    captions:()=>[
+      {n:'Sweet',t:`The secret's out 🤍 we're expecting! #pregnancyannouncement`},
+      {n:'Funny',t:`Eating for two and bragging for ten. Baby loading… 🤰 #babyontheway`},
+      {n:'Soft',t:`The happiest yes we never planned and always wanted. We're expecting. #pregnancyannouncement`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`A new little heartbeat, and the whole world feels softer. We're expecting. #babyontheway`},
+      {n:'Bold',t:`Plot twist: there's three of us now. Baby loading 🤍 #pregnancyannouncement`},
+      {n:'Grateful',t:`Counting weeks, counting blessings. A baby is on the way. #grateful`},
+      {n:'Playful',t:`We've got a tiny new roommate moving in. No rent, all love. #babyontheway`},
+      {n:'Classic',t:`With hearts wide open, we're expecting. #pregnancyannouncement`},
+      {n:'Cozy',t:`Tiny socks and big dreams — a baby is coming. #babyontheway`}]
+  },
+  engagement:{
+    label:'Engagement', hasGender:false, itsa:"We're", word:'ENGAGED',
+    reveal:'linear-gradient(165deg,#C97E97,#9E5470)',
+    card:['#FBEAE4','#E8B7C0'], cardWord:'#B36880',
+    pal:['#E8B7C0','#F4E6C6','#FFFFFF','#C98AA0','#C2A878'],
+    defaultMsg:'Forever just got a date.',
+    tag:'#engaged',
+    ann:from=>{const w=from||'We';return[
+      `It's official — ${w==='We'?'we':w} said yes! After all the love and all the laughs, forever finally has a ring on it. We're engaged 💍`,
+      `She said yes! (He did too.) ${w} are over the moon to share that we're getting married. The best chapter starts now.`,
+      `One question, one very happy yes. ${w} are engaged — and grinning like absolute fools. 💍`,
+      `Plot twist: we're getting MARRIED. ${w} are engaged, and we can't wait to celebrate with the people we love most.`,
+      `The ring is on and the secret is out. ${w} are engaged — here's to forever. ✨`];},
+    captions:()=>[
+      {n:'Sweet',t:`Forever, officially 💍 we're engaged! #engaged #shesaidyes`},
+      {n:'Funny',t:`I liked it so we put a ring on it. Engaged! 💍 #wedding`},
+      {n:'Soft',t:`The easiest yes of my life. We're engaged. #engaged`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Of all the people, in all the world — it's you, forever. We're engaged. #engaged`},
+      {n:'Bold',t:`Save the date (we're working on it). WE'RE ENGAGED 💍 #shesaidyes`},
+      {n:'Grateful',t:`Lucky doesn't cover it. Engaged to my favorite person. #engaged`},
+      {n:'Playful',t:`Status update: taken, forever. 💍 #engaged #wedding`},
+      {n:'Classic',t:`With joy beyond words, we're engaged. #shesaidyes`},
+      {n:'Cozy',t:`Just us, a ring, and a very happy yes. #engaged`}]
+  },
+  moving:{
+    label:"We're moving", hasGender:false, itsa:"We're", word:'MOVING',
+    reveal:'linear-gradient(165deg,#5E9C81,#2E6650)',
+    card:['#E7F1EA','#9BC9B3'], cardWord:'#3E7D63',
+    pal:['#7FB39A','#CDE8DA','#FFFFFF','#3E7D63','#C2A878'],
+    defaultMsg:'New address, same us. The door is always open.',
+    tag:'#wemoved',
+    ann:from=>{const w=from||'We';return[
+      `New address, same us 💛 ${w} are moving! New city, new doors, and a guest room with your name on it.`,
+      `Big news — ${w} are putting down roots somewhere new. We're moving, and we can't wait to have you over.`,
+      `Change of scenery, same open door. ${w} are moving! Update your contacts and come visit soon.`,
+      `${w} are off on a new adventure — we're moving! New chapter, new home, same people who love you.`,
+      `Boxes packed, hearts full. ${w} are moving! Here's to new beginnings (and a housewarming).`];},
+    captions:()=>[
+      {n:'Sweet',t:`New address, same us 💛 we're moving! #wemoved #newadventure`},
+      {n:'Funny',t:`Currently drowning in cardboard. We're moving! 📦 #movingday`},
+      {n:'Soft',t:`New home, new memories, same open door. We're moving. #newbeginnings`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Some doors close so brighter ones can open. We're moving. #newadventure`},
+      {n:'Bold',t:`New city. New chapter. Let's go. WE'RE MOVING 📦 #movingday`},
+      {n:'Grateful',t:`Grateful for the old, excited for the new. We're moving. #newhome`},
+      {n:'Playful',t:`Plot twist: new zip code. 🗺️ We're moving! #wemoved`},
+      {n:'Classic',t:`With excitement for what's ahead, we're moving. #newbeginnings`},
+      {n:'Cozy',t:`A new little corner of the world to call home. We're moving. #newhome`}]
+  },
+  graduation:{
+    label:'Graduation', hasGender:false, itsa:'Officially', word:'GRADUATED',
+    reveal:'linear-gradient(165deg,#3a4a7a,#1f2a52)',
+    card:['#EDE7D6','#CBB984'], cardWord:'#3a4a7a',
+    pal:['#C2A878','#3a4a7a','#FFFFFF','#A2824F','#6577AE'],
+    defaultMsg:'Years of hard work, one very proud moment.',
+    tag:'#graduation',
+    ann:from=>{const w=from||'We';return[
+      `${w} did it! After all the late nights and early mornings, it's official — graduation day is here, and so proud doesn't even cover it. 🎓`,
+      `Cap, gown, and a whole lot of pride. ${w} are officially graduates! On to whatever comes next.`,
+      `The tassel has been turned! ${w} made it across that stage — and we couldn't be prouder. 🎓`,
+      `Pomp, circumstance, and happy tears. ${w} are graduating! Here's to everything that's still to come.`,
+      `It's official — ${w} earned every single bit of it. Graduated! 🎓`];},
+    captions:()=>[
+      {n:'Sweet',t:`Officially a graduate 🎓 dreams loading… #graduation`},
+      {n:'Funny',t:`Adulting starts… now? Send coffee. Graduated! 🎓 #classof`},
+      {n:'Soft',t:`Years of work, one proud walk across the stage. #graduation`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Every late night led here. The tassel is turned. 🎓 #graduation`},
+      {n:'Bold',t:`Cap off. Future on. WE GRADUATED 🎓 #classof`},
+      {n:'Grateful',t:`To everyone who believed in us — we did it. Graduated. #thankful`},
+      {n:'Playful',t:`Degree: unlocked. Naps: pending. 🎓 #graduation`},
+      {n:'Classic',t:`With pride and a full heart, officially a graduate. #graduation`},
+      {n:'Cozy',t:`Hard work, big dreams, one proud day. 🎓 #graduate`}]
+  },
+  newhome:{
+    label:'New home', hasGender:false, itsa:"We're", word:'HOMEOWNERS',
+    reveal:'linear-gradient(165deg,#B07E54,#73471F)',
+    card:['#F1E7DD','#D8B89A'], cardWord:'#8a5a3a',
+    pal:['#C9A07E','#F4E6C6','#FFFFFF','#8a5a3a','#9BC9B3'],
+    defaultMsg:'New keys, new memories. The door is always open.',
+    tag:'#newhome',
+    ann:from=>{const w=from||'We';return[
+      `${w} got the keys! 🔑 It's official — we're homeowners. New address, open door, and a guest room with your name on it.`,
+      `Big news: ${w} bought a house! We can't wait to fill it with memories (and have you over very soon).`,
+      `Keys in hand, hearts full. ${w} are officially homeowners. 🏡`,
+      `${w} signed the papers — we're HOMEOWNERS! Here's to the place we'll finally call home.`,
+      `New home, same us. ${w} just bought our first place and we're completely over the moon. 🔑`];},
+    captions:()=>[
+      {n:'Sweet',t:`We got the keys 🔑 officially homeowners! #newhome`},
+      {n:'Funny',t:`A mortgage and a mailbox. We made it. 🏡 #adulting`},
+      {n:'Soft',t:`New keys, new memories, same open door. #newhome`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Four walls, endless memories waiting. Home at last. 🏡 #newhome`},
+      {n:'Bold',t:`Keys: acquired. HOMEOWNERS 🔑 #newhouse`},
+      {n:'Grateful',t:`Grateful for every door that led to this one. #newhome`},
+      {n:'Playful',t:`New zip code, who dis? 🏡 #homeowners`},
+      {n:'Classic',t:`With joy and a new set of keys, we're home. #newhome`},
+      {n:'Cozy',t:`A little place of our own, at last. 🔑 #newhome`}]
+  },
+  holiday:{
+    label:'Holiday card', hasGender:false, itsa:'Wishing you', word:'JOY',
+    reveal:'linear-gradient(165deg,#b5503f,#7a2d24)',
+    card:['#F6E9E2','#D9A99A'], cardWord:'#b5503f',
+    pal:['#b5503f','#C2A878','#FFFFFF','#2f6f4a','#E9C9A0'],
+    defaultMsg:'Wishing you warmth, light, and a little magic this season.',
+    tag:'#happyholidays',
+    ann:from=>{const w=from||'We';return[
+      `From our family to yours — ${w} are wishing you the warmest, brightest holiday season. 🤍 May it be merry and full of light.`,
+      `'Tis the season! ${w} are sending love, light, and the happiest of holidays your way.`,
+      `Cozy nights and warm hearts — ${w} wish you a beautiful holiday season. 🕯️`,
+      `Season's greetings from ${w==='We'?'us':w}! Wishing you joy that lingers long after the lights come down.`,
+      `Wherever you are this year, ${w} hope your holidays are merry, bright, and wrapped in love. 🤍`];},
+    captions:()=>[
+      {n:'Sweet',t:`Wishing you warmth & light this season 🤍 #happyholidays`},
+      {n:'Funny',t:`Sleigh-ing the holidays one cookie at a time 🍪 #happyholidays`},
+      {n:'Soft',t:`From our family to yours, the merriest of seasons. #holidays`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`May your season be soft, bright, and full of joy. 🤍 #happyholidays`},
+      {n:'Bold',t:`Lights up. Hearts full. HAPPY HOLIDAYS ✨ #holidays`},
+      {n:'Grateful',t:`Grateful for you this season and always. #happyholidays`},
+      {n:'Playful',t:`Cookies: eaten. Joy: delivered. 🍪 #holidays`},
+      {n:'Classic',t:`Warmest wishes for a beautiful holiday season. #happyholidays`},
+      {n:'Cozy',t:`Fireside warmth and a little magic, just for you. 🕯️ #holidays`}]
+  }
+};
+
+/* ---------------- occasion picker ---------------- */
+let occasion='gender';
+const occEl=$('#occasions');
+Object.keys(OCCASIONS).forEach((key,i)=>{const b=document.createElement('button');
+  b.className='chip'+(i===0?' on':'');b.textContent=OCCASIONS[key].label;
+  b.onclick=()=>{$$('#occasions .chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');setOccasion(key);};
+  occEl.appendChild(b);});
+function setOccasion(key){
+  occasion=key;const o=OCCASIONS[key];
+  $('#secretField').classList.toggle('hidden',!o.hasGender);
+}
 
 /* ---------------- gender ---------------- */
 let gender=null;
@@ -438,6 +735,34 @@ function genCaptionsPro(g,seed){
   ];
   const r=Math.abs(seed)%m.length;return m.slice(r).concat(m.slice(0,r));
 }
+/* dispatch by occasion (gender keeps its original richer generators) */
+function rotate(list,seed){const r=Math.abs(seed)%list.length;return list.slice(r).concat(list.slice(0,r));}
+function curAnnouncement(seed){
+  if(current.o==='gender') return genAnnouncement(current.g,current.from,seed);
+  return pick(OCCASIONS[current.o].ann(current.from),seed);
+}
+function curCaptions(seed){
+  if(current.o==='gender') return genCaptions(current.g,seed);
+  return rotate(OCCASIONS[current.o].captions(),seed);
+}
+function curCaptionsPro(seed){
+  if(current.o==='gender') return genCaptionsPro(current.g,seed);
+  return rotate(OCCASIONS[current.o].captionsPro(),seed);
+}
+/* a personalized, signed caption built from the name they typed —
+   makes the post they share feel custom rather than templated */
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function personalLead(){
+  if(!current.from) return null;
+  const o=OCCASIONS[current.o];
+  const tag=o.hasGender?(current.g==='girl'?'#itsagirl':'#itsaboy'):o.tag;
+  const phrase=o.hasGender?`it's a ${current.g}`:{
+    pregnancy:"we're expecting",engagement:"we're engaged",moving:"we're moving",
+    graduation:'we did it',newhome:"we're homeowners",holiday:'happy holidays'
+  }[current.o]||'big news';
+  return {n:'Personal',t:`${cap(phrase)}! 💛 With love, ${current.from}. ${tag}`};
+}
+function withPersonal(list){const lead=personalLead();return lead?[lead,...list]:list;}
 
 /* ================================================================
    CREATE
@@ -449,21 +774,28 @@ function renderCaptions(targetSel, list){
     d.innerHTML=`<span class="n">${c.n}</span><span>${c.t}</span>`;w.appendChild(d);});
 }
 function paintAnnouncement(){
-  $('#announce').textContent=genAnnouncement(current.g,current.from,annSeed);
+  $('#announce').textContent=curAnnouncement(annSeed);
 }
 $('#makeBtn').onclick=()=>{
-  if(!gender){toast('Pick the secret first');window.scrollTo({top:0,behavior:'smooth'});return;}
+  const occ=OCCASIONS[occasion];
+  if(occ.hasGender && !gender){toast('Pick the secret first');window.scrollTo({top:0,behavior:'smooth'});return;}
   const from=$('#from').value.trim(), userMsg=$('#msg').value.trim();
-  annSeed=seedFrom(from+gender+mood+userMsg);
-  const msg=userMsg||(gender==='girl'?"We can't wait to meet our girl.":"We can't wait to meet our boy.");
-  current={g:gender,from,mood,msg};
+  annSeed=seedFrom(occasion+from+(gender||'')+mood+userMsg);
+  const defMsg=occ.hasGender?(gender==='girl'?"We can't wait to meet our girl.":"We can't wait to meet our boy."):occ.defaultMsg;
+  const msg=userMsg||defMsg;
+  current={o:occasion,g:gender,from,mood,msg};
+
+  // tailor the premium teaser to the occasion (guess-first is gender-only)
+  $('#lockGuessLi').style.display=occ.hasGender?'flex':'none';
+  // show a blurred peek of the real printable card so buyers see the value
+  try{$('#lockCardImg').src=drawCard();}catch(e){}
 
   const m=MOODS[mood];
   $('#pvScreen').style.background=m.bg;
   $('#pvTeaser').textContent=from?`${from} have ${m.mood}…`:`Someone has ${m.mood}…`;
   $('#pvBrand').textContent=CFG.brand;
   paintAnnouncement();
-  renderCaptions('#captions',genCaptions(gender,annSeed));
+  renderCaptions('#captions',withPersonal(curCaptions(annSeed)));
 
   $('#result').classList.remove('hidden');
   $('#result').scrollIntoView({behavior:'smooth'});
@@ -473,6 +805,9 @@ $('#makeBtn').onclick=()=>{
   $('#shareLink').onclick=()=>share(`${CFG.brand} reveal`,'Tap to reveal our secret 💛',link);
   $('#copyAnnounce').onclick=()=>copy($('#announce').textContent);
   $('#pvPhone').onclick=()=>{location.hash=pack(current);renderViewer();};
+
+  // a buyer who already paid on this device stays unlocked across reloads
+  if(isUnlocked()) unlockPremium();
 };
 $('#rerollAnn').onclick=()=>{annSeed=(annSeed+7)|0;paintAnnouncement();};
 $('#startBtn').onclick=()=>$('#builder').scrollIntoView({behavior:'smooth'});
@@ -491,29 +826,48 @@ $('#sampleBtn').onclick=()=>{location.hash=pack(SAMPLE);renderViewer();};
    ================================================================ */
 $('#buyBtn').onclick=()=>{window.open(CFG.stripe,'_blank');$('#paidRow').style.display='block';toast('Opening secure checkout…');};
 $('#paidBtn').onclick=()=>unlockPremium();
-if(new URLSearchParams(location.search).get('unlocked')==='1'){ /* auto-unlock buyers redirected from Stripe */
-  window.addEventListener('load',()=>{ if(current) unlockPremium(); });
-}
+/* a buyer who paid stays unlocked across reloads on their device; and if
+   Stripe redirects them back with ?unlocked=1 we remember it too */
+function isUnlocked(){return lsGet('glimmer_unlocked')==='1';}
+if(new URLSearchParams(location.search).get('unlocked')==='1') lsSet('glimmer_unlocked','1');
 function unlockPremium(){
   if(!current){toast('Create a reveal first');return;}
+  lsSet('glimmer_unlocked','1');
   $('#premium').classList.remove('hidden');$('.lock').style.display='none';
   buildCard();
-  renderCaptions('#captionsPro',genCaptionsPro(current.g,seedFrom(current.from+current.g)));
-  $('#copyGuess').onclick=()=>copy(buildLink(true));
+  renderCaptions('#captionsPro',curCaptionsPro(seedFrom(current.from+current.o+(current.g||''))));
+  const hasG=OCCASIONS[current.o].hasGender;
+  $('#guessBlock').style.display=hasG?'block':'none';
+  if(hasG)$('#copyGuess').onclick=()=>copy(buildLink(true));
   $('#premium').scrollIntoView({behavior:'smooth'});toast('Unlocked ✦');
 }
-function buildCard(){
-  const c=$('#cardCanvas'),x=c.getContext('2d'),g=current.g;
+/* draws the printable card and returns a PNG data-URL (no side effects)
+   — reused for both the blurred locked preview and the real download */
+function drawCard(){
+  const c=$('#cardCanvas'),x=c.getContext('2d'),o=OCCASIONS[current.o];
+  let top,bot,word,wordColor,itsa;
+  if(o.hasGender){
+    const g=current.g;
+    if(g==='girl'){top='#FBE4EC';bot='#F3C6D8';wordColor='#D86B92';}
+    else{top='#E2EFFA';bot='#BEDDF4';wordColor='#3f7cb4';}
+    word=g.toUpperCase();itsa="IT'S A";
+  }else{
+    top=o.card[0];bot=o.card[1];wordColor=o.cardWord;word=o.word;itsa=o.itsa.toUpperCase();
+  }
   const grad=x.createLinearGradient(0,0,0,1350);
-  if(g==='girl'){grad.addColorStop(0,'#FBE4EC');grad.addColorStop(1,'#F3C6D8');}
-  else{grad.addColorStop(0,'#E2EFFA');grad.addColorStop(1,'#BEDDF4');}
+  grad.addColorStop(0,top);grad.addColorStop(1,bot);
   x.fillStyle=grad;x.fillRect(0,0,1080,1350);
-  x.textAlign='center';x.fillStyle='#241F33';x.font='700 46px Manrope,sans-serif';x.fillText("IT'S A",540,470);
-  x.font='600 200px Fraunces,Georgia,serif';x.fillStyle=g==='girl'?'#D86B92':'#3f7cb4';x.fillText(g.toUpperCase(),540,690);
+  x.textAlign='center';x.fillStyle='#241F33';x.font='700 46px Manrope,sans-serif';x.fillText(itsa,540,470);
+  // auto-fit the headline so longer words (EXPECTING/ENGAGED) never overflow
+  let px=200;do{x.font='600 '+px+'px Fraunces,Georgia,serif';if(x.measureText(word).width<=920)break;px-=8;}while(px>56);
+  x.fillStyle=wordColor;x.fillText(word,540,680);
   x.fillStyle='#241F33';x.font='italic 40px Fraunces,Georgia,serif';wrapText(x,current.msg,540,840,760,52);
   if(current.from){x.font='700 34px Manrope,sans-serif';x.fillStyle='#8A8296';x.fillText('— '+current.from,540,1180);}
   x.font='700 26px Manrope,sans-serif';x.fillStyle='#A2824F';x.fillText(CFG.brand.toUpperCase(),540,1280);
-  const url=c.toDataURL('image/png');$('#cardPreview').src=url;
+  return c.toDataURL('image/png');
+}
+function buildCard(){
+  const url=drawCard();$('#cardPreview').src=url;
   $('#dlCard').onclick=()=>{const a=document.createElement('a');a.href=url;a.download='reveal-card.png';a.click();};
 }
 function wrapText(ctx,t,cx,cy,maxW,lh){const ws=t.split(' ');let line='',y=cy;
@@ -538,7 +892,7 @@ $('#applyCfg').onclick=()=>{
   CFG={brand:$('#cfgBrand').value.trim()||DEFAULTS.brand,
        stripe:$('#cfgStripe').value.trim()||DEFAULTS.stripe,
        price:$('#cfgPrice').value.trim()||DEFAULTS.price};
-  applyBrand();toast('Applied');
+  applyBrand();saveConfig();toast('Applied');
 };
 function liveLink(){
   const q=new URLSearchParams();
@@ -570,7 +924,9 @@ function buildPromo(){
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function renderViewer(){
   const data=unpack(location.hash.slice(1));
-  if(!data||!data.g){$('#viewer').style.display='none';$('#creator').style.display='block';return;}
+  const valid=data&&(data.g||(data.o&&OCCASIONS[data.o]));
+  if(!valid){$('#viewer').style.display='none';$('#creator').style.display='block';return;}
+  if(!data.o)data.o='gender';
   $('#creator').style.display='none';
   const V=$('#viewer');V.style.display='flex';
   const m=MOODS[data.mood]||MOODS.Dreamy;V.style.background=m.bg;
@@ -593,21 +949,49 @@ function runReveal(data){
 }
 function showWord(data){
   $('#vwStage1').classList.add('hidden');$('#vwGuess').classList.add('hidden');
-  const V=$('#viewer');
-  V.style.background=data.g==='girl'?'linear-gradient(165deg,#E78BA6,#C25E84)':'linear-gradient(165deg,#6FA8DC,#3f7cb4)';
+  const V=$('#viewer'),o=OCCASIONS[data.o]||OCCASIONS.gender;
+  let bg,word;
+  if(o.hasGender){bg=data.g==='girl'?'linear-gradient(165deg,#E78BA6,#C25E84)':'linear-gradient(165deg,#6FA8DC,#3f7cb4)';word=data.g.toUpperCase();}
+  else{bg=o.reveal;word=o.word;}
+  V.style.background=bg;
   $('#vwStage2').classList.remove('hidden');
-  const word=$('#vwWord');word.textContent=data.g.toUpperCase();$('#vwMsg').textContent=data.msg||'';
+  $('#vwItsa').textContent=o.itsa;
+  const wordEl=$('#vwWord');wordEl.textContent=word;$('#vwMsg').textContent=data.msg||'';
+  fitWord(wordEl);
   $('#vwItsa').classList.add('fade-up');
-  setTimeout(()=>word.classList.add('reveal-show'),180);
+  setTimeout(()=>wordEl.classList.add('reveal-show'),180);
   setTimeout(()=>$('#vwMsg').classList.add('fade-up'),900);
   setTimeout(()=>$('#vwCta').classList.add('fade-up'),1500);
-  if(!reduce)burst(data.g);
+  if(!reduce){burst(data);chime();}
 }
-function burst(g){
+/* shrink the reveal word until a long one (EXPECTING/HOMEOWNERS) fits the screen */
+function fitWord(el){
+  el.style.fontSize='';
+  const avail=(el.parentElement.clientWidth||innerWidth-64)-4;
+  let size=parseFloat(getComputedStyle(el).fontSize)||80,guard=40;
+  while(el.scrollWidth>avail && size>22 && guard-->0){size-=4;el.style.fontSize=size+'px';}
+}
+/* a soft ascending chime at the reveal — synthesized, no audio file.
+   The orb tap is a user gesture, so playback is allowed. */
+function chime(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    const ctx=new AC();const notes=[523.25,659.25,783.99,1046.5];
+    notes.forEach((f,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain(),t=ctx.currentTime+i*0.12;
+      osc.type='sine';osc.frequency.value=f;
+      gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.16,t+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start(t);osc.stop(t+0.6);
+    });
+  }catch(e){}
+}
+function burst(data){
   const cv=$('#confetti'),ctx=cv.getContext('2d');const DPR=Math.min(devicePixelRatio||1,2);
   cv.width=innerWidth*DPR;cv.height=innerHeight*DPR;ctx.scale(DPR,DPR);
   const W=innerWidth,H=innerHeight;
-  const pal=g==='girl'?['#E78BA6','#FBE4EC','#F7B7CD','#FFF','#D86B92']:['#6FA8DC','#E2EFFA','#A9D0F0','#FFF','#3f7cb4'];
+  const o=OCCASIONS[data.o]||OCCASIONS.gender;
+  const pal=o.hasGender?(data.g==='girl'?['#E78BA6','#FBE4EC','#F7B7CD','#FFF','#D86B92']:['#6FA8DC','#E2EFFA','#A9D0F0','#FFF','#3f7cb4']):o.pal;
   const P=[];
   for(let i=0;i<170;i++)P.push({x:W/2,y:H*0.42,vx:(Math.random()-.5)*14,vy:(Math.random()*-15)-4,
     g:.32+Math.random()*.2,s:6+Math.random()*7,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3,c:pal[i%pal.length],life:1});
