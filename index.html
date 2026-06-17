@@ -205,6 +205,10 @@
   #viewer{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;padding:34px;background:var(--ink);color:#fff;overflow:hidden;transition:background 1.1s ease}
   #confetti{position:fixed;inset:0;z-index:1;pointer-events:none}
+  #vwBack{position:fixed;top:16px;left:16px;z-index:6;cursor:pointer;font-family:inherit;font-weight:700;
+    font-size:.82rem;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);
+    border-radius:999px;padding:9px 16px;backdrop-filter:blur(4px)}
+  #vwBack:active{transform:scale(.96)}
   .vw-inner{position:relative;z-index:2;max-width:440px;width:100%}
   .vw-from{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;margin-bottom:18px}
   .vw-teaser{font-family:'Fraunces';font-weight:400;font-style:italic;font-size:1.7rem;line-height:1.25;opacity:.95}
@@ -429,6 +433,7 @@
 <!-- ===================== VIEWER ===================== -->
 <div id="viewer">
   <canvas id="confetti"></canvas>
+  <button id="vwBack" class="hidden">‹ Back to my reveal</button>
   <div class="vw-inner">
     <div class="vw-from" id="vwFrom"></div>
     <div id="vwStage1">
@@ -819,7 +824,7 @@ $('#makeBtn').onclick=()=>{
   $('#copyLink').onclick=()=>copy(link);
   $('#shareLink').onclick=()=>share(`${CFG.brand} reveal`,'Tap to reveal our secret 💛',link);
   $('#copyAnnounce').onclick=()=>copy($('#announce').textContent);
-  $('#pvPhone').onclick=()=>{location.hash=pack(current);renderViewer();};
+  $('#pvPhone').onclick=()=>{previewMode=true;location.hash=pack(current);renderViewer();};
 
   // a buyer who already paid on this device stays unlocked across reloads
   if(isUnlocked()) unlockPremium();
@@ -947,6 +952,15 @@ function buildPromo(){
    VIEWER
    ================================================================ */
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+/* previewMode = the OWNER is playing their own reveal from the result page,
+   so we offer a non-destructive "Back" instead of the visitor "Make your own" */
+let previewMode=false;
+function exitPreview(){
+  previewMode=false;
+  $('#viewer').style.display='none';$('#creator').style.display='block';
+  history.replaceState(null,'',location.pathname+location.search);  // drop the #hash without reloading
+  const lock=$('.lock');(lock&&lock.offsetParent!==null?lock:$('#result')).scrollIntoView({behavior:'smooth'});
+}
 function renderViewer(){
   const data=unpack(location.hash.slice(1));
   const valid=data&&(data.g||(data.o&&OCCASIONS[data.o]));
@@ -954,6 +968,8 @@ function renderViewer(){
   if(!data.o)data.o='gender';
   $('#creator').style.display='none';
   const V=$('#viewer');V.style.display='flex';
+  $('#vwBack').classList.toggle('hidden',!previewMode);
+  $('#vwBack').onclick=exitPreview;
   const m=MOODS[data.mood]||MOODS.Dreamy;V.style.background=m.bg;
   $('#vwFrom').textContent=data.from||'';
   $('#vwTeaser').textContent=data.from?`${data.from} have ${m.mood}…`:`Someone has ${m.mood}…`;
