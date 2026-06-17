@@ -190,6 +190,14 @@
   .guarantee .gi{font-size:1.1rem;line-height:1;flex:none}
   .guarantee b{color:var(--ink)}
   .scarcity{text-align:center;font-size:.74rem;color:var(--gold-deep);font-weight:700;margin-top:10px}
+  .card-peek{position:relative;height:172px;margin:14px 0 16px;border-radius:14px;overflow:hidden;
+    border:1px solid var(--line);background:var(--porcelain)}
+  .card-peek img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 20%;
+    filter:blur(7px) saturate(1.04);transform:scale(1.07)}
+  .peek-veil{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;
+    background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(36,31,51,.30));padding:14px}
+  .peek-veil span{background:rgba(36,31,51,.74);color:#fff;font-size:.76rem;font-weight:700;
+    padding:8px 14px;border-radius:999px;backdrop-filter:blur(2px)}
 
   /* ===================== VIEWER ===================== */
   #viewer{position:fixed;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;
@@ -241,6 +249,8 @@
     <button class="btn btn-ghost btn-sm" id="sampleBtn" style="flex:1">See an example</button>
   </div>
 
+  <!-- [EDIT] PLACEHOLDER social proof — replace with YOUR real numbers/rating
+       before running ads. Shipping invented stats as fact is misleading. -->
   <div class="trust">
     <div class="avatars"><span></span><span></span><span></span></div>
     <span class="stars">★★★★★</span>
@@ -310,6 +320,10 @@
       <span class="badge">Most loved</span>
       <h4>✦ Premium bundle <span class="price-pill" id="pricePill">$3</span></h4>
       <div class="value-line"><span class="was" id="wasPrice">$19</span><span class="save">Save 84% today</span></div>
+      <div class="card-peek" id="cardPeek">
+        <img id="lockCardImg" alt="Preview of your printable announcement card" />
+        <div class="peek-veil"><span>🔒 Your printable card — unlock to download</span></div>
+      </div>
       <ul>
         <li>A <b>printable announcement card</b> — high-res, frame-ready PNG</li>
         <li id="lockGuessLi">A <b>"guess the gender"</b> link to build hype before the big reveal</li>
@@ -342,6 +356,7 @@
     </section>
   </section>
 
+  <!-- [EDIT] PLACEHOLDER testimonials — swap in real reviews before launch. -->
   <div class="quotes">
     <div class="qh">Loved by families everywhere</div>
     <div class="quote">
@@ -438,15 +453,21 @@ const DEFAULTS = {
   price: "$3"
 };
 /* read overrides from the URL (?brand=&stripe=&price=) so your
-   "live link" carries your setup without touching the file */
+   "live link" carries your setup without touching the file.
+   Precedence: URL param → saved-on-this-device → default. The save
+   step means you (the owner) never lose your Stripe setup on reload. */
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function loadConfig(){
   const q=new URLSearchParams(location.search);
+  let saved={};try{saved=JSON.parse(lsGet('glimmer_cfg')||'{}');}catch(e){}
   return {
-    brand: q.get('brand') || DEFAULTS.brand,
-    stripe: q.get('stripe') || DEFAULTS.stripe,
-    price: q.get('price') || DEFAULTS.price
+    brand: q.get('brand') || saved.brand || DEFAULTS.brand,
+    stripe: q.get('stripe') || saved.stripe || DEFAULTS.stripe,
+    price: q.get('price') || saved.price || DEFAULTS.price
   };
 }
+function saveConfig(){lsSet('glimmer_cfg',JSON.stringify(CFG));}
 let CFG = loadConfig();
 
 /* ---------------- helpers ---------------- */
@@ -752,6 +773,8 @@ $('#makeBtn').onclick=()=>{
 
   // tailor the premium teaser to the occasion (guess-first is gender-only)
   $('#lockGuessLi').style.display=occ.hasGender?'flex':'none';
+  // show a blurred peek of the real printable card so buyers see the value
+  try{$('#lockCardImg').src=drawCard();}catch(e){}
 
   const m=MOODS[mood];
   $('#pvScreen').style.background=m.bg;
@@ -768,6 +791,9 @@ $('#makeBtn').onclick=()=>{
   $('#shareLink').onclick=()=>share(`${CFG.brand} reveal`,'Tap to reveal our secret 💛',link);
   $('#copyAnnounce').onclick=()=>copy($('#announce').textContent);
   $('#pvPhone').onclick=()=>{location.hash=pack(current);renderViewer();};
+
+  // a buyer who already paid on this device stays unlocked across reloads
+  if(isUnlocked()) unlockPremium();
 };
 $('#rerollAnn').onclick=()=>{annSeed=(annSeed+7)|0;paintAnnouncement();};
 $('#startBtn').onclick=()=>$('#builder').scrollIntoView({behavior:'smooth'});
@@ -786,11 +812,13 @@ $('#sampleBtn').onclick=()=>{location.hash=pack(SAMPLE);renderViewer();};
    ================================================================ */
 $('#buyBtn').onclick=()=>{window.open(CFG.stripe,'_blank');$('#paidRow').style.display='block';toast('Opening secure checkout…');};
 $('#paidBtn').onclick=()=>unlockPremium();
-if(new URLSearchParams(location.search).get('unlocked')==='1'){ /* auto-unlock buyers redirected from Stripe */
-  window.addEventListener('load',()=>{ if(current) unlockPremium(); });
-}
+/* a buyer who paid stays unlocked across reloads on their device; and if
+   Stripe redirects them back with ?unlocked=1 we remember it too */
+function isUnlocked(){return lsGet('glimmer_unlocked')==='1';}
+if(new URLSearchParams(location.search).get('unlocked')==='1') lsSet('glimmer_unlocked','1');
 function unlockPremium(){
   if(!current){toast('Create a reveal first');return;}
+  lsSet('glimmer_unlocked','1');
   $('#premium').classList.remove('hidden');$('.lock').style.display='none';
   buildCard();
   renderCaptions('#captionsPro',curCaptionsPro(seedFrom(current.from+current.o+(current.g||''))));
@@ -799,7 +827,9 @@ function unlockPremium(){
   if(hasG)$('#copyGuess').onclick=()=>copy(buildLink(true));
   $('#premium').scrollIntoView({behavior:'smooth'});toast('Unlocked ✦');
 }
-function buildCard(){
+/* draws the printable card and returns a PNG data-URL (no side effects)
+   — reused for both the blurred locked preview and the real download */
+function drawCard(){
   const c=$('#cardCanvas'),x=c.getContext('2d'),o=OCCASIONS[current.o];
   let top,bot,word,wordColor,itsa;
   if(o.hasGender){
@@ -820,7 +850,10 @@ function buildCard(){
   x.fillStyle='#241F33';x.font='italic 40px Fraunces,Georgia,serif';wrapText(x,current.msg,540,840,760,52);
   if(current.from){x.font='700 34px Manrope,sans-serif';x.fillStyle='#8A8296';x.fillText('— '+current.from,540,1180);}
   x.font='700 26px Manrope,sans-serif';x.fillStyle='#A2824F';x.fillText(CFG.brand.toUpperCase(),540,1280);
-  const url=c.toDataURL('image/png');$('#cardPreview').src=url;
+  return c.toDataURL('image/png');
+}
+function buildCard(){
+  const url=drawCard();$('#cardPreview').src=url;
   $('#dlCard').onclick=()=>{const a=document.createElement('a');a.href=url;a.download='reveal-card.png';a.click();};
 }
 function wrapText(ctx,t,cx,cy,maxW,lh){const ws=t.split(' ');let line='',y=cy;
@@ -845,7 +878,7 @@ $('#applyCfg').onclick=()=>{
   CFG={brand:$('#cfgBrand').value.trim()||DEFAULTS.brand,
        stripe:$('#cfgStripe').value.trim()||DEFAULTS.stripe,
        price:$('#cfgPrice').value.trim()||DEFAULTS.price};
-  applyBrand();toast('Applied');
+  applyBrand();saveConfig();toast('Applied');
 };
 function liveLink(){
   const q=new URLSearchParams();
@@ -914,7 +947,22 @@ function showWord(data){
   setTimeout(()=>wordEl.classList.add('reveal-show'),180);
   setTimeout(()=>$('#vwMsg').classList.add('fade-up'),900);
   setTimeout(()=>$('#vwCta').classList.add('fade-up'),1500);
-  if(!reduce)burst(data);
+  if(!reduce){burst(data);chime();}
+}
+/* a soft ascending chime at the reveal — synthesized, no audio file.
+   The orb tap is a user gesture, so playback is allowed. */
+function chime(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    const ctx=new AC();const notes=[523.25,659.25,783.99,1046.5];
+    notes.forEach((f,i)=>{
+      const osc=ctx.createOscillator(),gain=ctx.createGain(),t=ctx.currentTime+i*0.12;
+      osc.type='sine';osc.frequency.value=f;
+      gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(0.16,t+0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start(t);osc.stop(t+0.6);
+    });
+  }catch(e){}
 }
 function burst(data){
   const cv=$('#confetti'),ctx=cv.getContext('2d');const DPR=Math.min(devicePixelRatio||1,2);
