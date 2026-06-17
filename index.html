@@ -43,6 +43,21 @@
     -webkit-font-smoothing:antialiased;overflow-x:hidden}
   .wrap{max-width:520px;margin:0 auto;padding:20px 20px 70px;position:relative;z-index:2}
 
+  /* soft floating background — premium ambient depth (creator view only) */
+  .bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .bg-orbs i{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;will-change:transform}
+  .bg-orbs i:nth-child(1){width:300px;height:300px;top:-70px;left:-60px;
+    background:radial-gradient(circle,#f4e6c6,transparent 70%);animation:drift 24s ease-in-out infinite}
+  .bg-orbs i:nth-child(2){width:240px;height:240px;top:34%;right:-80px;
+    background:radial-gradient(circle,#fbe4ec,transparent 70%);animation:drift 30s ease-in-out -8s infinite}
+  .bg-orbs i:nth-child(3){width:230px;height:230px;bottom:-70px;left:14%;
+    background:radial-gradient(circle,#e2effa,transparent 70%);animation:drift 27s ease-in-out -14s infinite}
+  .bg-orbs i:nth-child(4){width:170px;height:170px;top:12%;right:24%;
+    background:radial-gradient(circle,#f0e3cf,transparent 70%);animation:drift 33s ease-in-out -20s infinite}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}
+    33%{transform:translate(26px,-30px) scale(1.1)}66%{transform:translate(-20px,22px) scale(.94)}}
+  @media (prefers-reduced-motion: reduce){.bg-orbs i{animation:none}}
+
   .brandbar{display:flex;align-items:center;gap:11px;margin-bottom:30px}
   .mark{width:32px;height:32px;border-radius:50%;flex:none;
     background:radial-gradient(circle at 30% 28%, #fff6e6, var(--gold) 62%, var(--gold-deep));
@@ -239,6 +254,8 @@
 </head>
 <body>
 
+<div class="bg-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
 <!-- ===================== CREATOR ===================== -->
 <main id="creator" class="wrap">
   <div class="brandbar">
@@ -255,12 +272,12 @@
     <button class="btn btn-ghost btn-sm" id="sampleBtn" style="flex:1">See an example</button>
   </div>
 
-  <!-- [EDIT] PLACEHOLDER social proof — replace with YOUR real numbers/rating
-       before running ads. Shipping invented stats as fact is misleading. -->
+  <!-- [EDIT] Once you have real reviews/stats, you can put a number here
+       (e.g. "2,000+ reveals made"). Default avoids any invented figure. -->
   <div class="trust">
     <div class="avatars"><span></span><span></span><span></span></div>
     <span class="stars">★★★★★</span>
-    <span class="proof"><b>14,000+ families</b> · 4.9 average</span>
+    <span class="proof">For <b>every happy announcement</b> — reveal, pregnancy, engagement &amp; more</span>
   </div>
 
   <div class="benefits">
@@ -370,20 +387,21 @@
     </section>
   </section>
 
-  <!-- [EDIT] PLACEHOLDER testimonials — swap in real reviews before launch. -->
+  <!-- [EDIT] Sample testimonials — replace with YOUR real reviews before
+       running ads. Keep them honest: only publish things people actually said. -->
   <div class="quotes">
-    <div class="qh">Loved by families everywhere</div>
+    <div class="qh">Made for moments like these</div>
     <div class="quote">
-      <p>"We live three states from my parents. I sent the link, they tapped, and my mom burst into happy tears on FaceTime. Worth every penny."</p>
-      <div class="qm"><span class="qa"></span><div><div class="qn">Priya &amp; Dev</div><div class="qs">Austin, TX</div></div><span class="qstars">★★★★★</span></div>
+      <p>"We live three states from my parents. I sent the link, they tapped, and my mom burst into happy tears on FaceTime."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">Priya &amp; Dev</div><div class="qs">gender reveal</div></div><span class="qstars">★★★★★</span></div>
     </div>
     <div class="quote">
-      <p>"I'm not crafty and I had it done before my coffee got cold. The printable card is now framed in the nursery."</p>
-      <div class="qm"><span class="qa"></span><div><div class="qn">Hannah M.</div><div class="qs">first-time mom</div></div><span class="qstars">★★★★★</span></div>
+      <p>"Telling the grandparents we're expecting — one tap and the whole family was crying. The printable card is framed in the nursery now."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">Hannah M.</div><div class="qs">pregnancy announcement</div></div><span class="qstars">★★★★★</span></div>
     </div>
     <div class="quote">
-      <p>"Sent the guessing link to the group chat first — everyone was hooked. The actual reveal got 40 replies. So much better than a balloon."</p>
-      <div class="qm"><span class="qa"></span><div><div class="qn">The Okafors</div><div class="qs">baby #2 on the way</div></div><span class="qstars">★★★★★</span></div>
+      <p>"We announced our engagement with a link instead of 50 phone calls. Everyone screenshotted the reveal. So much better than a caption."</p>
+      <div class="qm"><span class="qa"></span><div><div class="qn">Sam &amp; Alex</div><div class="qs">just engaged 💍</div></div><span class="qstars">★★★★★</span></div>
     </div>
   </div>
 
@@ -422,7 +440,8 @@
     <!-- PROMOTE -->
     <div id="panePromote" class="hidden">
       <h2>Promote it</h2>
-      <p class="sub">Ready-to-post copy and a demo link for your ads. Tap to copy.</p>
+      <p class="sub">Pick what you're advertising, then tap any line to copy. The demo link shows it off.</p>
+      <div class="chips" id="promoOcc" style="margin-bottom:16px"></div>
       <div id="promoList"></div>
       <button class="btn btn-ghost" id="copyDemo" style="margin-top:14px">Copy a live demo link for ads</button>
       <p class="hint" style="margin-top:12px">For the prettiest shared previews, drop an <b>og.png</b> (1200×630) next to your file before deploying.</p>
@@ -933,17 +952,62 @@ function liveLink(){
   return location.origin+location.pathname+(qs?'?'+qs:'');
 }
 $('#copyLive').onclick=()=>{ $('#applyCfg').onclick(); copy(liveLink()); };
-$('#copyDemo').onclick=()=>copy(liveLink()+'#'+pack(SAMPLE));
+$('#copyDemo').onclick=()=>copy(liveLink()+'#'+pack(sampleFor(promoOcc)));
 
+/* ad copy tailored to whichever occasion the owner is advertising */
+let promoOcc='any';
+function promosFor(k,b){return ({
+  any:[
+    {n:'Hook',t:`POV: you found the easiest way to announce big news 🩷🩵 Make a link, send it to everyone — they tap and the screen lights up. Try ${b}.`},
+    {n:'Story',t:`We live 3 states from family, so we sent them a link. One tap and grandma cried 🥹 ${b} made the whole moment.`},
+    {n:'Ad',t:`Announce your big news in 60 seconds — gender reveal, pregnancy, engagement & more. No app, just a link that lights up. ${b}.`}],
+  gender:[
+    {n:'Hook',t:`POV: the easiest gender reveal ever 🩷🩵 Make a link, send it to the family, everyone taps at once. Try ${b}.`},
+    {n:'Story',t:`We live 3 states from our parents, so we sent a link. One tap and grandma cried 🥹 ${b} made the moment.`},
+    {n:'Ad',t:`Reveal your baby's gender in 60 seconds. No app, no party planning — a link that lights up pink or blue. ${b}.`}],
+  pregnancy:[
+    {n:'Hook',t:`We're expecting — and we told everyone with ONE link 🤍 They tap, the screen lights up. Try ${b}.`},
+    {n:'Story',t:`Telling the grandparents we're pregnant? We sent a link. One tap, happy tears, screenshots everywhere 🥹 ${b}.`},
+    {n:'Ad',t:`Announce your pregnancy in 60 seconds. No app, no fuss — a beautiful link your whole family taps to reveal. ${b}.`}],
+  engagement:[
+    {n:'Hook',t:`She said yes 💍 and we announced it with one tap-to-reveal link. Everyone screenshotted it. Try ${b}.`},
+    {n:'Story',t:`We wanted to tell family we're engaged without 50 phone calls, so we sent a link. One tap: ENGAGED 💍 ${b}.`},
+    {n:'Ad',t:`Announce your engagement in 60 seconds 💍 A stunning link your friends tap to reveal. No app, no account. ${b}.`}],
+  moving:[
+    {n:'Hook',t:`New address, same us 💛 We told everyone we're moving with one tap-to-reveal link. Try ${b}.`},
+    {n:'Story',t:`Instead of a group text nobody reads, we sent a link. One tap: WE'RE MOVING 📦 Everyone replied 🥹 ${b}.`},
+    {n:'Ad',t:`Announce your move in 60 seconds 📦 A link friends tap to reveal your big news. No app, no account. ${b}.`}],
+  graduation:[
+    {n:'Hook',t:`We did it 🎓 Announced graduation with one tap-to-reveal link and the family went wild. Try ${b}.`},
+    {n:'Story',t:`Told the grandparents about graduation with a link, not a text. One tap: GRADUATED 🎓 So many proud tears. ${b}.`},
+    {n:'Ad',t:`Celebrate the grad in 60 seconds 🎓 A beautiful link everyone taps to reveal. No app, no account. ${b}.`}],
+  newhome:[
+    {n:'Hook',t:`We got the keys 🔑 and announced our new home with one tap-to-reveal link. Try ${b}.`},
+    {n:'Story',t:`We sent family a link instead of a text. One tap: HOMEOWNERS 🏡 Cue the happy chaos in the group chat. ${b}.`},
+    {n:'Ad',t:`Announce your new home in 60 seconds 🔑 A link friends tap to reveal the big news. No app, no account. ${b}.`}],
+  holiday:[
+    {n:'Hook',t:`We sent our holiday card as a tap-to-reveal link this year ✨ Everyone loved it. Try ${b}.`},
+    {n:'Story',t:`Instead of mailing cards, we sent a link. One tap, the screen lights up with our holiday wish 🤍 ${b}.`},
+    {n:'Ad',t:`Send a holiday card people actually remember ✨ A link they tap to reveal your wish. No app. ${b}.`}],
+})[k]||[];}
+function sampleFor(k){
+  if(k==='any'||k==='gender'||!OCCASIONS[k]) return SAMPLE;
+  return {o:k,from:'Mara & Jon',mood:'Confetti',msg:OCCASIONS[k].defaultMsg};
+}
 function buildPromo(){
-  const b=CFG.brand;
-  const promos=[
-    {n:'Hook',t:`POV: you found the easiest way to do a gender reveal 🩷🩵 Make a link, send it to the family, everyone taps at once. Try ${b}.`},
-    {n:'Story',t:`We live 3 states from our parents — so we sent them a link. One tap and grandma cried 🥹 ${b} made the whole moment.`},
-    {n:'Ad',t:`Reveal your baby's gender in 60 seconds. No app, no party planning. A link that lights up pink or blue. ${b}.`},
-  ];
+  const occEl=$('#promoOcc');
+  if(!occEl.childElementCount){
+    [['any','Any occasion'],['gender','Gender'],['pregnancy','Pregnancy'],['engagement','Engagement'],
+     ['moving','Moving'],['graduation','Graduation'],['newhome','New home'],['holiday','Holiday']]
+    .forEach(([k,label])=>{const c=document.createElement('button');c.className='chip'+(k===promoOcc?' on':'');c.textContent=label;
+      c.onclick=()=>{promoOcc=k;$$('#promoOcc .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');renderPromos();};
+      occEl.appendChild(c);});
+  }
+  renderPromos();
+}
+function renderPromos(){
   const w=$('#promoList');w.innerHTML='';
-  promos.forEach(p=>{const d=document.createElement('div');d.className='caption';
+  promosFor(promoOcc,CFG.brand).forEach(p=>{const d=document.createElement('div');d.className='caption';
     d.style.cursor='pointer';d.innerHTML=`<span class="n">${p.n}</span><span>${p.t}</span>`;
     d.onclick=()=>copy(p.t);w.appendChild(d);});
 }
