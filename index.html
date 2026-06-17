@@ -1069,16 +1069,15 @@ function burst(data){
 }
 
 /* ---------------- owner gate ----------------
-   The gear (Stripe setup) must only be reachable by YOU, not by visitors
-   or buyers. You're treated as the owner if: the site isn't configured yet
-   (fresh deploy), you opened it with ?setup=1, or you've set it up before
-   on this device. The live link you share carries no ?setup, so guests
-   never see the gear. Lost access on a new device? open  yoursite/?setup=1 */
+   The gear (Stripe setup) must only ever be reachable by YOU — never by
+   visitors or buyers. You're the owner only if you opened the page with
+   ?setup=1, or you've set it up before on THIS device (saved flag). The
+   links you share never contain ?setup, so guests never see the gear.
+   To reach setup on any device: open  yoursite/?setup=1 */
 function isOwner(){
   const q=new URLSearchParams(location.search);
   if(q.get('setup')==='1'){lsSet('glimmer_owner','1');return true;}
-  if(lsGet('glimmer_owner')==='1')return true;
-  return CFG.stripe===DEFAULTS.stripe;   // unconfigured ⇒ you're setting it up
+  return lsGet('glimmer_owner')==='1';
 }
 if(!isOwner()) $('#gearBtn').classList.add('hidden');
 // owner: instantly preview exactly what buyers unlock, no payment needed
