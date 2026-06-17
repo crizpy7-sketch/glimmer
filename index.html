@@ -43,20 +43,25 @@
     -webkit-font-smoothing:antialiased;overflow-x:hidden}
   .wrap{max-width:520px;margin:0 auto;padding:20px 20px 70px;position:relative;z-index:2}
 
-  /* soft floating background — premium ambient depth (creator view only) */
+  /* floating background — premium ambient depth + drifting motes */
   .bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-  .bg-orbs i{position:absolute;border-radius:50%;filter:blur(46px);opacity:.55;will-change:transform}
-  .bg-orbs i:nth-child(1){width:300px;height:300px;top:-70px;left:-60px;
-    background:radial-gradient(circle,#f4e6c6,transparent 70%);animation:drift 24s ease-in-out infinite}
-  .bg-orbs i:nth-child(2){width:240px;height:240px;top:34%;right:-80px;
-    background:radial-gradient(circle,#fbe4ec,transparent 70%);animation:drift 30s ease-in-out -8s infinite}
-  .bg-orbs i:nth-child(3){width:230px;height:230px;bottom:-70px;left:14%;
-    background:radial-gradient(circle,#e2effa,transparent 70%);animation:drift 27s ease-in-out -14s infinite}
-  .bg-orbs i:nth-child(4){width:170px;height:170px;top:12%;right:24%;
-    background:radial-gradient(circle,#f0e3cf,transparent 70%);animation:drift 33s ease-in-out -20s infinite}
+  .bg-orbs i{position:absolute;border-radius:50%;filter:blur(40px);opacity:.72;will-change:transform}
+  .bg-orbs i:nth-child(1){width:320px;height:320px;top:-70px;left:-60px;
+    background:radial-gradient(circle,#f1d79c,transparent 70%);animation:drift 24s ease-in-out infinite}
+  .bg-orbs i:nth-child(2){width:250px;height:250px;top:30%;right:-80px;
+    background:radial-gradient(circle,#f7c4d6,transparent 70%);animation:drift 30s ease-in-out -8s infinite}
+  .bg-orbs i:nth-child(3){width:240px;height:240px;bottom:-70px;left:12%;
+    background:radial-gradient(circle,#c8e1f6,transparent 70%);animation:drift 27s ease-in-out -14s infinite}
+  .bg-orbs i:nth-child(4){width:180px;height:180px;top:12%;right:22%;
+    background:radial-gradient(circle,#ecd6ab,transparent 70%);animation:drift 33s ease-in-out -20s infinite}
   @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}
-    33%{transform:translate(26px,-30px) scale(1.1)}66%{transform:translate(-20px,22px) scale(.94)}}
-  @media (prefers-reduced-motion: reduce){.bg-orbs i{animation:none}}
+    33%{transform:translate(26px,-30px) scale(1.12)}66%{transform:translate(-22px,24px) scale(.92)}}
+  /* small motes that visibly float upward */
+  .bg-orbs b{position:absolute;bottom:-24px;border-radius:50%;opacity:0;
+    animation:rise linear infinite}
+  @keyframes rise{0%{transform:translateY(0) scale(.7);opacity:0}
+    12%{opacity:.8}85%{opacity:.5}100%{transform:translateY(-104vh) scale(1.15);opacity:0}}
+  @media (prefers-reduced-motion: reduce){.bg-orbs i,.bg-orbs b{animation:none}.bg-orbs b{opacity:.5}}
 
   .brandbar{display:flex;align-items:center;gap:11px;margin-bottom:30px}
   .mark{width:32px;height:32px;border-radius:50%;flex:none;
@@ -254,7 +259,16 @@
 </head>
 <body>
 
-<div class="bg-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="bg-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i>
+  <b style="left:7%;width:11px;height:11px;background:#d9b36a;animation-duration:15s;animation-delay:-1s"></b>
+  <b style="left:21%;width:7px;height:7px;background:#e79bb6;animation-duration:19s;animation-delay:-7s"></b>
+  <b style="left:34%;width:13px;height:13px;background:#e7c98f;animation-duration:17s;animation-delay:-3s"></b>
+  <b style="left:48%;width:8px;height:8px;background:#8fb8e0;animation-duration:22s;animation-delay:-11s"></b>
+  <b style="left:61%;width:10px;height:10px;background:#e79bb6;animation-duration:16s;animation-delay:-5s"></b>
+  <b style="left:73%;width:7px;height:7px;background:#d9b36a;animation-duration:20s;animation-delay:-9s"></b>
+  <b style="left:85%;width:12px;height:12px;background:#8fb8e0;animation-duration:18s;animation-delay:-2s"></b>
+  <b style="left:92%;width:8px;height:8px;background:#e7c98f;animation-duration:21s;animation-delay:-13s"></b>
+</div>
 
 <!-- ===================== CREATOR ===================== -->
 <main id="creator" class="wrap">
