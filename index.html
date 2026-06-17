@@ -289,6 +289,7 @@
     <div class="field">
       <label class="label">Mood</label>
       <div class="chips" id="moods"></div>
+      <p class="hint">Each mood has its own celebration — confetti, petals, hearts, bubbles, stars or soft orbs.</p>
     </div>
     <button class="btn btn-primary" id="makeBtn">Create the reveal</button>
   </div>
@@ -508,14 +509,14 @@ function unpack(c){try{return JSON.parse(decodeURIComponent(escape(atob(c.split(
    teaser background) and tints the celebration confetti. The big reveal
    colour itself comes from the occasion (pink/blue, gold, etc.). */
 const MOODS={
-  Dreamy:{bg:'linear-gradient(160deg,#2b2440,#1b2a4a)',mood:'a little dream',accent:'#8fa8ff'},
-  Botanical:{bg:'linear-gradient(160deg,#22322a,#15241d)',mood:'something growing',accent:'#7fd6a8'},
-  "Golden hour":{bg:'linear-gradient(160deg,#3a2a30,#241a2e)',mood:'a warm secret',accent:'#ffcf8f'},
-  Midnight:{bg:'linear-gradient(160deg,#171528,#0e0c1c)',mood:'a quiet secret',accent:'#9aa0d6'},
-  Confetti:{bg:'linear-gradient(160deg,#2a2440,#3a2440)',mood:'a reason to celebrate',accent:'#ff9ad1'},
-  Blush:{bg:'linear-gradient(160deg,#3a2433,#241526)',mood:'a little blush',accent:'#ffb3c8'},
-  Aurora:{bg:'linear-gradient(160deg,#15323a,#172244)',mood:'a quiet wonder',accent:'#7fe0d6'},
-  Champagne:{bg:'linear-gradient(160deg,#322a20,#241c2c)',mood:'a reason to toast',accent:'#f0d9a0'},
+  Dreamy:{bg:'linear-gradient(160deg,#2b2440,#1b2a4a)',mood:'a little dream',accent:'#8fa8ff',effect:'orbs'},
+  Botanical:{bg:'linear-gradient(160deg,#22322a,#15241d)',mood:'something growing',accent:'#7fd6a8',effect:'petals'},
+  "Golden hour":{bg:'linear-gradient(160deg,#3a2a30,#241a2e)',mood:'a warm secret',accent:'#ffcf8f',effect:'stars'},
+  Midnight:{bg:'linear-gradient(160deg,#171528,#0e0c1c)',mood:'a quiet secret',accent:'#9aa0d6',effect:'stars'},
+  Confetti:{bg:'linear-gradient(160deg,#2a2440,#3a2440)',mood:'a reason to celebrate',accent:'#ff9ad1',effect:'confetti'},
+  Blush:{bg:'linear-gradient(160deg,#3a2433,#241526)',mood:'a little blush',accent:'#ffb3c8',effect:'hearts'},
+  Aurora:{bg:'linear-gradient(160deg,#15323a,#172244)',mood:'a quiet wonder',accent:'#7fe0d6',effect:'orbs'},
+  Champagne:{bg:'linear-gradient(160deg,#322a20,#241c2c)',mood:'a reason to toast',accent:'#f0d9a0',effect:'bubbles'},
 };
 let mood='Dreamy';
 const moodsEl=$('#moods');
@@ -825,7 +826,7 @@ function buildLink(guessFirst){
 }
 
 /* ---------------- sample / demo reveal ---------------- */
-const SAMPLE={g:'girl',from:'Mara & Jon',mood:'Dreamy',msg:'We can’t wait to meet our girl.'};
+const SAMPLE={g:'girl',from:'Mara & Jon',mood:'Confetti',msg:'We can’t wait to meet our girl.'};
 $('#sampleBtn').onclick=()=>{location.hash=pack(SAMPLE);renderViewer();};
 
 /* ================================================================
@@ -993,26 +994,61 @@ function chime(){
     });
   }catch(e){}
 }
+/* The celebration. The OCCASION sets the colours (pink/blue, gold…); the
+   MOOD sets the effect — confetti, petals, hearts, bubbles, stars, orbs. */
+function drawShape(ctx,p){
+  const s=p.s;ctx.fillStyle=p.c;
+  if(p.shape==='rect'){ctx.fillRect(-s/2,-s/2,s,s*0.6);}
+  else if(p.shape==='petal'){ctx.beginPath();ctx.ellipse(0,0,s*0.55,s*0.24,0,0,6.28);ctx.fill();}
+  else if(p.shape==='heart'){const k=s*0.5;ctx.beginPath();ctx.moveTo(0,-k*0.2);
+    ctx.bezierCurveTo(k*0.95,-k*1.15,k*1.5,k*0.25,0,k);
+    ctx.bezierCurveTo(-k*1.5,k*0.25,-k*0.95,-k*1.15,0,-k*0.2);ctx.closePath();ctx.fill();}
+  else if(p.shape==='star'){ctx.beginPath();for(let i=0;i<4;i++){const a=i*Math.PI/2;
+      ctx.lineTo(Math.cos(a)*s*0.5,Math.sin(a)*s*0.5);
+      ctx.lineTo(Math.cos(a+Math.PI/4)*s*0.17,Math.sin(a+Math.PI/4)*s*0.17);}ctx.closePath();ctx.fill();}
+  else if(p.shape==='bubble'){const a=ctx.globalAlpha;ctx.globalAlpha=a*0.4;ctx.beginPath();ctx.arc(0,0,s*0.5,0,6.28);ctx.fill();
+    ctx.globalAlpha=a*0.85;ctx.lineWidth=1.3;ctx.strokeStyle=p.c;ctx.stroke();ctx.globalAlpha=a;}
+  else if(p.shape==='orb'){ctx.globalAlpha*=0.16;ctx.beginPath();ctx.arc(0,0,s,0,6.28);ctx.fill();}
+}
 function burst(data){
   const cv=$('#confetti'),ctx=cv.getContext('2d');const DPR=Math.min(devicePixelRatio||1,2);
   cv.width=innerWidth*DPR;cv.height=innerHeight*DPR;ctx.scale(DPR,DPR);
   const W=innerWidth,H=innerHeight;
   const o=OCCASIONS[data.o]||OCCASIONS.gender;
   let pal=o.hasGender?(data.g==='girl'?['#E78BA6','#FBE4EC','#F7B7CD','#FFF','#D86B92']:['#6FA8DC','#E2EFFA','#A9D0F0','#FFF','#3f7cb4']):o.pal.slice();
-  // the chosen mood tints the celebration so each mood feels different
-  const acc=(MOODS[data.mood]||{}).accent;if(acc)pal=pal.concat([acc,acc]);
+  const mood=MOODS[data.mood]||{};if(mood.accent)pal=pal.concat([mood.accent]);
+  const effect=mood.effect||'confetti';
+  const R=(a,b)=>a+Math.random()*(b-a), col=()=>pal[(Math.random()*pal.length)|0];
   const P=[];
-  for(let i=0;i<170;i++)P.push({x:W/2,y:H*0.42,vx:(Math.random()-.5)*14,vy:(Math.random()*-15)-4,
-    g:.32+Math.random()*.2,s:6+Math.random()*7,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3,c:pal[i%pal.length],life:1});
+  // initial fill so the screen comes alive immediately
+  function seedFall(shape,n,smin,smax,yTop){for(let i=0;i<n;i++)P.push({x:R(0,W),y:yTop?R(-40,0):R(-H*0.3,H),
+    vx:0,vy:R(0.7,2),s:R(smin,smax),rot:R(0,6.28),vr:R(-.05,.05),sw:R(0,6.28),swa:R(.4,1.3),c:col(),a:1,shape,mode:'fall'});}
+  function seedRise(shape,n,smin,smax,yBot){for(let i=0;i<n;i++)P.push({x:R(0,W),y:yBot?R(H,H+40):R(0,H*1.2),
+    vx:0,vy:R(-1.1,-2.6),s:R(smin,smax),rot:R(0,6.28),vr:R(-.04,.04),sw:R(0,6.28),swa:R(.4,1.2),c:col(),a:1,shape,mode:'rise'});}
+  function seedConfetti(){for(let i=0;i<170;i++)P.push({x:W/2,y:H*0.42,vx:R(-7,7),vy:R(-19,-4),
+    g:R(.32,.54),s:R(6,13),rot:R(0,6.28),vr:R(-.15,.15),c:col(),a:1,shape:'rect',mode:'fall'});}
+  const E={
+    confetti:{init:seedConfetti,             feed:()=>P.push({x:R(0,W),y:-10,vx:R(-.6,.6),vy:R(1,2.6),g:.02,s:R(5,10),rot:R(0,6.28),vr:R(-.06,.06),c:col(),a:1,shape:'rect',mode:'fall'})},
+    petals:  {init:()=>seedFall('petal',80,11,21),  feed:()=>seedFall('petal',2,11,21,1)},
+    hearts:  {init:()=>seedFall('heart',54,13,23),  feed:()=>seedFall('heart',1,13,23,1)},
+    stars:   {init:()=>seedFall('star',100,6,13),   feed:()=>seedFall('star',2,6,13,1)},
+    bubbles: {init:()=>seedRise('bubble',70,9,22),  feed:()=>seedRise('bubble',2,9,22,1)},
+    orbs:    {init:()=>seedRise('orb',40,26,64),    feed:()=>seedRise('orb',1,26,64,1)},
+  };
+  const eff=E[effect]||E.confetti;eff.init();
   let frame=0;
   (function loop(){ctx.clearRect(0,0,W,H);
-    if(frame%4===0&&frame<260)P.push({x:Math.random()*W,y:-10,vx:(Math.random()-.5)*1.2,vy:1+Math.random()*1.6,
-      g:.02,s:5+Math.random()*5,rot:Math.random()*6.28,vr:(Math.random()-.5)*.12,c:pal[(Math.random()*pal.length)|0],life:1});
-    for(const p of P){p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.vx*=.99;p.rot+=p.vr;if(p.y>H+20)p.life=0;
-      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.globalAlpha=Math.max(0,Math.min(1,p.life));
-      ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);ctx.restore();}
-    for(let i=P.length-1;i>=0;i--)if(!P[i].life)P.splice(i,1);
-    frame++;if(P.length)requestAnimationFrame(loop);else ctx.clearRect(0,0,W,H);})();
+    if(frame<210&&frame%4===0)eff.feed();
+    for(const p of P){
+      if(p.g!=null){p.vy+=p.g;p.vx*=.99;}
+      p.x+=p.vx+(p.swa?Math.sin(p.sw)*p.swa:0);p.y+=p.vy;p.rot+=p.vr;if(p.sw!=null)p.sw+=.05;
+      if(p.shape==='star')p.a=0.5+0.5*Math.abs(Math.sin(p.sw*1.5));   // twinkle
+      if(p.mode==='fall'&&p.y>H+40)p.a=0;
+      if(p.mode==='rise'&&p.y<-40)p.a=0;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.globalAlpha=Math.max(0,Math.min(1,p.a));
+      drawShape(ctx,p);ctx.restore();}
+    for(let i=P.length-1;i>=0;i--)if(P[i].a<=0)P.splice(i,1);
+    frame++;if(P.length&&frame<620)requestAnimationFrame(loop);else ctx.clearRect(0,0,W,H);})();
 }
 
 /* ---------------- owner gate ----------------
