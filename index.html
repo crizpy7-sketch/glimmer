@@ -43,25 +43,26 @@
     -webkit-font-smoothing:antialiased;overflow-x:hidden}
   .wrap{max-width:520px;margin:0 auto;padding:20px 20px 70px;position:relative;z-index:2}
 
-  /* floating background — premium ambient depth + drifting motes */
+  /* blurred ambient glows — sit behind content */
   .bg-orbs{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-  .bg-orbs i{position:absolute;border-radius:50%;filter:blur(40px);opacity:.72;will-change:transform}
-  .bg-orbs i:nth-child(1){width:320px;height:320px;top:-70px;left:-60px;
-    background:radial-gradient(circle,#f1d79c,transparent 70%);animation:drift 24s ease-in-out infinite}
-  .bg-orbs i:nth-child(2){width:250px;height:250px;top:30%;right:-80px;
-    background:radial-gradient(circle,#f7c4d6,transparent 70%);animation:drift 30s ease-in-out -8s infinite}
-  .bg-orbs i:nth-child(3){width:240px;height:240px;bottom:-70px;left:12%;
-    background:radial-gradient(circle,#c8e1f6,transparent 70%);animation:drift 27s ease-in-out -14s infinite}
-  .bg-orbs i:nth-child(4){width:180px;height:180px;top:12%;right:22%;
-    background:radial-gradient(circle,#ecd6ab,transparent 70%);animation:drift 33s ease-in-out -20s infinite}
+  .bg-orbs i{position:absolute;border-radius:50%;filter:blur(38px);opacity:.9;will-change:transform}
+  .bg-orbs i:nth-child(1){width:340px;height:340px;top:-80px;left:-70px;
+    background:radial-gradient(circle,#eac578,transparent 70%);animation:drift 20s ease-in-out infinite}
+  .bg-orbs i:nth-child(2){width:280px;height:280px;top:28%;right:-90px;
+    background:radial-gradient(circle,#f2a4c0,transparent 70%);animation:drift 24s ease-in-out -8s infinite}
+  .bg-orbs i:nth-child(3){width:270px;height:270px;bottom:-80px;left:10%;
+    background:radial-gradient(circle,#a9d0f2,transparent 70%);animation:drift 22s ease-in-out -14s infinite}
+  .bg-orbs i:nth-child(4){width:200px;height:200px;top:10%;right:20%;
+    background:radial-gradient(circle,#e9cb8f,transparent 70%);animation:drift 27s ease-in-out -18s infinite}
   @keyframes drift{0%,100%{transform:translate(0,0) scale(1)}
-    33%{transform:translate(26px,-30px) scale(1.12)}66%{transform:translate(-22px,24px) scale(.92)}}
-  /* small motes that visibly float upward */
-  .bg-orbs b{position:absolute;bottom:-24px;border-radius:50%;opacity:0;
-    animation:rise linear infinite}
-  @keyframes rise{0%{transform:translateY(0) scale(.7);opacity:0}
-    12%{opacity:.8}85%{opacity:.5}100%{transform:translateY(-104vh) scale(1.15);opacity:0}}
-  @media (prefers-reduced-motion: reduce){.bg-orbs i,.bg-orbs b{animation:none}.bg-orbs b{opacity:.5}}
+    33%{transform:translate(34px,-38px) scale(1.15)}66%{transform:translate(-28px,30px) scale(.9)}}
+  /* crisp motes that float UP over everything (don't block taps) */
+  .motes{position:fixed;inset:0;z-index:4;overflow:hidden;pointer-events:none}
+  .motes b{position:absolute;bottom:-30px;border-radius:50%;background:currentColor;
+    box-shadow:0 0 12px 2px currentColor;opacity:0;animation:rise linear infinite}
+  @keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}
+    10%{opacity:.9}80%{opacity:.65}100%{transform:translateY(-110vh) scale(1.15);opacity:0}}
+  @media (prefers-reduced-motion: reduce){.bg-orbs i{animation:none}.motes{display:none}}
 
   .brandbar{display:flex;align-items:center;gap:11px;margin-bottom:30px}
   .mark{width:32px;height:32px;border-radius:50%;flex:none;
@@ -259,15 +260,20 @@
 </head>
 <body>
 
-<div class="bg-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i>
-  <b style="left:7%;width:11px;height:11px;background:#d9b36a;animation-duration:15s;animation-delay:-1s"></b>
-  <b style="left:21%;width:7px;height:7px;background:#e79bb6;animation-duration:19s;animation-delay:-7s"></b>
-  <b style="left:34%;width:13px;height:13px;background:#e7c98f;animation-duration:17s;animation-delay:-3s"></b>
-  <b style="left:48%;width:8px;height:8px;background:#8fb8e0;animation-duration:22s;animation-delay:-11s"></b>
-  <b style="left:61%;width:10px;height:10px;background:#e79bb6;animation-duration:16s;animation-delay:-5s"></b>
-  <b style="left:73%;width:7px;height:7px;background:#d9b36a;animation-duration:20s;animation-delay:-9s"></b>
-  <b style="left:85%;width:12px;height:12px;background:#8fb8e0;animation-duration:18s;animation-delay:-2s"></b>
-  <b style="left:92%;width:8px;height:8px;background:#e7c98f;animation-duration:21s;animation-delay:-13s"></b>
+<div class="bg-orbs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="motes" aria-hidden="true">
+  <b style="left:6%;width:13px;height:13px;color:#d4a85a;animation-duration:11s;animation-delay:-1s"></b>
+  <b style="left:15%;width:9px;height:9px;color:#e88bac;animation-duration:14s;animation-delay:-6s"></b>
+  <b style="left:24%;width:16px;height:16px;color:#e7c074;animation-duration:13s;animation-delay:-3s"></b>
+  <b style="left:33%;width:8px;height:8px;color:#7fb0e0;animation-duration:16s;animation-delay:-9s"></b>
+  <b style="left:42%;width:12px;height:12px;color:#e88bac;animation-duration:12s;animation-delay:-4s"></b>
+  <b style="left:50%;width:10px;height:10px;color:#d4a85a;animation-duration:15s;animation-delay:-8s"></b>
+  <b style="left:58%;width:15px;height:15px;color:#7fb0e0;animation-duration:13s;animation-delay:-2s"></b>
+  <b style="left:67%;width:9px;height:9px;color:#e7c074;animation-duration:17s;animation-delay:-11s"></b>
+  <b style="left:76%;width:12px;height:12px;color:#e88bac;animation-duration:12s;animation-delay:-5s"></b>
+  <b style="left:84%;width:8px;height:8px;color:#d4a85a;animation-duration:15s;animation-delay:-10s"></b>
+  <b style="left:91%;width:14px;height:14px;color:#7fb0e0;animation-duration:14s;animation-delay:-3s"></b>
+  <b style="left:97%;width:9px;height:9px;color:#e7c074;animation-duration:16s;animation-delay:-7s"></b>
 </div>
 
 <!-- ===================== CREATOR ===================== -->
