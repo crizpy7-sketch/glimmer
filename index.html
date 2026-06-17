@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Glimmer — make a gender reveal in 60 seconds</title>
+<title>Glimmer — turn your big news into a reveal in 60 seconds</title>
 
 <!-- ============ SOCIAL PREVIEW (for ads + shared links) ============
      This is what shows when your link is pasted into iMessage, WhatsApp,
      Instagram, TikTok bio, or used as an ad destination.
      [EDIT] og:image → drop an og.png (1200×630) next to this file. -->
-<meta name="description" content="Tap once and the whole screen lights up — pink or blue. Make a beautiful gender reveal link in 60 seconds." />
+<meta name="description" content="Tap once and the whole screen lights up. Make a beautiful reveal link for any happy news — gender, pregnancy, engagement, a new home — in 60 seconds." />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Someone has a secret… 💛 tap to reveal" />
-<meta property="og:description" content="Make a stunning gender reveal your whole family can open in one tap. No app, no account." />
+<meta property="og:description" content="Make a stunning reveal your whole family can open in one tap. Gender, pregnancy, engagement, and more. No app, no account." />
 <meta property="og:image" content="og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Someone has a secret… 💛 tap to reveal" />
-<meta name="twitter:description" content="Make a stunning gender reveal in 60 seconds." />
+<meta name="twitter:description" content="Turn your big news into a stunning reveal in 60 seconds." />
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23C2A878'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -233,9 +233,9 @@
     <button class="gear" id="gearBtn" title="Setup" aria-label="Setup">⚙</button>
   </div>
 
-  <p class="eyebrow">The moment, made beautiful</p>
-  <h1>Reveal the <em>secret</em> in a single tap.</h1>
-  <p class="lede">Build a link your whole family can open anywhere. One tap and the screen lights up — pink or blue.</p>
+  <p class="eyebrow">Every happy secret, made beautiful</p>
+  <h1>Reveal your <em>big news</em> in a single tap.</h1>
+  <p class="lede">Gender reveal, pregnancy, engagement, a new home — build a link your whole family can open anywhere. One tap and the screen lights up.</p>
   <div class="hero-cta">
     <button class="btn btn-primary btn-sm" id="startBtn" style="flex:1">Make my reveal</button>
     <button class="btn btn-ghost btn-sm" id="sampleBtn" style="flex:1">See an example</button>
@@ -486,6 +486,9 @@ const MOODS={
   "Golden hour":{bg:'linear-gradient(160deg,#3a2a30,#241a2e)',mood:'a warm secret'},
   Midnight:{bg:'linear-gradient(160deg,#171528,#0e0c1c)',mood:'a quiet secret'},
   Confetti:{bg:'linear-gradient(160deg,#2a2440,#3a2440)',mood:'a reason to celebrate'},
+  Blush:{bg:'linear-gradient(160deg,#3a2433,#241526)',mood:'a little blush'},
+  Aurora:{bg:'linear-gradient(160deg,#15323a,#172244)',mood:'a quiet wonder'},
+  Champagne:{bg:'linear-gradient(160deg,#322a20,#241c2c)',mood:'a reason to toast'},
 };
 let mood='Dreamy';
 const moodsEl=$('#moods');
@@ -579,6 +582,81 @@ const OCCASIONS={
       {n:'Playful',t:`Plot twist: new zip code. 🗺️ We're moving! #wemoved`},
       {n:'Classic',t:`With excitement for what's ahead, we're moving. #newbeginnings`},
       {n:'Cozy',t:`A new little corner of the world to call home. We're moving. #newhome`}]
+  },
+  graduation:{
+    label:'Graduation', hasGender:false, itsa:'Officially', word:'GRADUATED',
+    reveal:'linear-gradient(165deg,#3a4a7a,#1f2a52)',
+    card:['#EDE7D6','#CBB984'], cardWord:'#3a4a7a',
+    pal:['#C2A878','#3a4a7a','#FFFFFF','#A2824F','#6577AE'],
+    defaultMsg:'Years of hard work, one very proud moment.',
+    tag:'#graduation',
+    ann:from=>{const w=from||'We';return[
+      `${w} did it! After all the late nights and early mornings, it's official — graduation day is here, and so proud doesn't even cover it. 🎓`,
+      `Cap, gown, and a whole lot of pride. ${w} are officially graduates! On to whatever comes next.`,
+      `The tassel has been turned! ${w} made it across that stage — and we couldn't be prouder. 🎓`,
+      `Pomp, circumstance, and happy tears. ${w} are graduating! Here's to everything that's still to come.`,
+      `It's official — ${w} earned every single bit of it. Graduated! 🎓`];},
+    captions:()=>[
+      {n:'Sweet',t:`Officially a graduate 🎓 dreams loading… #graduation`},
+      {n:'Funny',t:`Adulting starts… now? Send coffee. Graduated! 🎓 #classof`},
+      {n:'Soft',t:`Years of work, one proud walk across the stage. #graduation`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Every late night led here. The tassel is turned. 🎓 #graduation`},
+      {n:'Bold',t:`Cap off. Future on. WE GRADUATED 🎓 #classof`},
+      {n:'Grateful',t:`To everyone who believed in us — we did it. Graduated. #thankful`},
+      {n:'Playful',t:`Degree: unlocked. Naps: pending. 🎓 #graduation`},
+      {n:'Classic',t:`With pride and a full heart, officially a graduate. #graduation`},
+      {n:'Cozy',t:`Hard work, big dreams, one proud day. 🎓 #graduate`}]
+  },
+  newhome:{
+    label:'New home', hasGender:false, itsa:"We're", word:'HOMEOWNERS',
+    reveal:'linear-gradient(165deg,#C9A07E,#8a5a3a)',
+    card:['#F1E7DD','#D8B89A'], cardWord:'#8a5a3a',
+    pal:['#C9A07E','#F4E6C6','#FFFFFF','#8a5a3a','#9BC9B3'],
+    defaultMsg:'New keys, new memories. The door is always open.',
+    tag:'#newhome',
+    ann:from=>{const w=from||'We';return[
+      `${w} got the keys! 🔑 It's official — we're homeowners. New address, open door, and a guest room with your name on it.`,
+      `Big news: ${w} bought a house! We can't wait to fill it with memories (and have you over very soon).`,
+      `Keys in hand, hearts full. ${w} are officially homeowners. 🏡`,
+      `${w} signed the papers — we're HOMEOWNERS! Here's to the place we'll finally call home.`,
+      `New home, same us. ${w} just bought our first place and we're completely over the moon. 🔑`];},
+    captions:()=>[
+      {n:'Sweet',t:`We got the keys 🔑 officially homeowners! #newhome`},
+      {n:'Funny',t:`A mortgage and a mailbox. We made it. 🏡 #adulting`},
+      {n:'Soft',t:`New keys, new memories, same open door. #newhome`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`Four walls, endless memories waiting. Home at last. 🏡 #newhome`},
+      {n:'Bold',t:`Keys: acquired. HOMEOWNERS 🔑 #newhouse`},
+      {n:'Grateful',t:`Grateful for every door that led to this one. #newhome`},
+      {n:'Playful',t:`New zip code, who dis? 🏡 #homeowners`},
+      {n:'Classic',t:`With joy and a new set of keys, we're home. #newhome`},
+      {n:'Cozy',t:`A little place of our own, at last. 🔑 #newhome`}]
+  },
+  holiday:{
+    label:'Holiday card', hasGender:false, itsa:'Wishing you', word:'JOY',
+    reveal:'linear-gradient(165deg,#b5503f,#7a2d24)',
+    card:['#F6E9E2','#D9A99A'], cardWord:'#b5503f',
+    pal:['#b5503f','#C2A878','#FFFFFF','#2f6f4a','#E9C9A0'],
+    defaultMsg:'Wishing you warmth, light, and a little magic this season.',
+    tag:'#happyholidays',
+    ann:from=>{const w=from||'We';return[
+      `From our family to yours — ${w} are wishing you the warmest, brightest holiday season. 🤍 May it be merry and full of light.`,
+      `'Tis the season! ${w} are sending love, light, and the happiest of holidays your way.`,
+      `Cozy nights and warm hearts — ${w} wish you a beautiful holiday season. 🕯️`,
+      `Season's greetings from ${w==='We'?'us':w}! Wishing you joy that lingers long after the lights come down.`,
+      `Wherever you are this year, ${w} hope your holidays are merry, bright, and wrapped in love. 🤍`];},
+    captions:()=>[
+      {n:'Sweet',t:`Wishing you warmth & light this season 🤍 #happyholidays`},
+      {n:'Funny',t:`Sleigh-ing the holidays one cookie at a time 🍪 #happyholidays`},
+      {n:'Soft',t:`From our family to yours, the merriest of seasons. #holidays`}],
+    captionsPro:()=>[
+      {n:'Poetic',t:`May your season be soft, bright, and full of joy. 🤍 #happyholidays`},
+      {n:'Bold',t:`Lights up. Hearts full. HAPPY HOLIDAYS ✨ #holidays`},
+      {n:'Grateful',t:`Grateful for you this season and always. #happyholidays`},
+      {n:'Playful',t:`Cookies: eaten. Joy: delivered. 🍪 #holidays`},
+      {n:'Classic',t:`Warmest wishes for a beautiful holiday season. #happyholidays`},
+      {n:'Cozy',t:`Fireside warmth and a little magic, just for you. 🕯️ #holidays`}]
   }
 };
 
